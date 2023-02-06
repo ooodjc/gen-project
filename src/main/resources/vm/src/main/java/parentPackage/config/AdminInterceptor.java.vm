@@ -1,0 +1,66 @@
+package ${parentPackage}.config;
+
+import com.alibaba.fastjson.JSONObject;
+import ${parentPackage}.utils.AdminTokenUtil;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class AdminInterceptor implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        AdminTokenUtil tokenUtil = new AdminTokenUtil();
+        String token = request.getHeader("X-Token");
+        if(token == null || token.equals("")){
+            return response(response,"token不能为空");
+        }
+        //token验证结果
+        if(!tokenUtil.verify(token)){
+            return response(response, "token错误");
+        }
+        String id = tokenUtil.getId(token);
+        request.setAttribute("id",id);
+        return true;
+    }
+
+    //返回错误信息,403为token错误
+    public boolean response(HttpServletResponse response,String errmsg) throws IOException {
+        JSONObject res = new JSONObject();
+        res.put("errno", 403);
+        res.put("errmsg", errmsg);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        response.getWriter().append(res.toJSONString());
+        return  false;
+    }
+
+    //token验证成功，但是用户已被删除
+    public boolean responseNoUser(HttpServletResponse response,String errmsg) throws IOException {
+        JSONObject res = new JSONObject();
+        res.put("errno", 405);
+        res.put("errmsg", errmsg);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=utf-8");
+        response.getWriter().append(res.toJSONString());
+        return  false;
+    }
+
+    /**
+     * 请求处理之后进行调用，但是在视图被渲染之前（Controller方法调用之后）
+     */
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
+        //System.out.println("执行了TestInterceptor的postHandle方法");
+    }
+
+    /**
+     * 在整个请求结束之后被调用，也就是在DispatcherServlet 渲染了对应的视图之后执行（主要是用于进行资源清理工作）
+     */
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        //System.out.println("执行了TestInterceptor的afterCompletion方法");
+    }
+}

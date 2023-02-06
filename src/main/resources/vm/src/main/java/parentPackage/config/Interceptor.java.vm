@@ -1,0 +1,34 @@
+package ${parentPackage}.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.annotation.Resource;
+
+@Configuration
+public class Interceptor implements WebMvcConfigurer {
+
+    @Bean
+    AdminInterceptor adminInterceptor(){
+        return new AdminInterceptor();
+    }
+
+    @Resource
+    private CorsConfig corsConfig;
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        //注册自定义跨域拦截器
+        registry.addInterceptor(corsConfig).addPathPatterns("/**");
+
+        //自定义路由拦截器
+        InterceptorRegistration adminRegistration = registry.addInterceptor(adminInterceptor());
+        adminRegistration.addPathPatterns("/admin/**");                      //所有路径都被拦截
+        adminRegistration.excludePathPatterns(                         //添加不拦截路径
+                "/admin/UserInfo/Login",
+                "/admin/UserInfo/Register"
+        );
+    }
+}

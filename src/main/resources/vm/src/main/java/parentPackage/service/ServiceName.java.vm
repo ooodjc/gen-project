@@ -1,0 +1,86 @@
+package ${parentPackage}.service;
+
+import ${parentPackage}.entity.${entityName};
+import ${parentPackage}.entity.${entityName}Example;
+import ${parentPackage}.mapper.${entityName}Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ${entityName}Service {
+    @Autowired
+    private ${entityName}Mapper ${entityName}Mapper;
+
+    //列表
+    public List<${entityName}> Item(){
+        return ${entityName}Mapper.selectByExample(null);
+    }
+
+    //按主键查询
+    public ${entityName} SelectId(int id){
+        return ${entityName}Mapper.selectByPrimaryKey(id);
+    }
+
+    //模糊搜索
+    public List<${entityName}> Search(String key){
+        ${entityName}Example example = new ${entityName}Example();
+        return ${entityName}Mapper.selectByExample(example);
+    }
+
+
+    //新增
+    public boolean Add(${entityName} info){
+        if (${entityName}Mapper.insert(info) > 0){
+            return true;
+        }
+        return false;
+    }
+
+    //删除
+    public boolean Delete(int id){
+        ${entityName}Example example = new ${entityName}Example();
+        example.createCriteria().andIdEqualTo(id);
+        if (${entityName}Mapper.deleteByExample(example) > 0){
+            return true;
+        }
+        return false;
+    }
+
+    //批量删除
+    public boolean Delete(${entityName}[] infos){
+        ${entityName}Example example = new ${entityName}Example();
+        for (${entityName} v : infos){
+            example.or().andIdEqualTo(v.getId());
+        }
+        if (${entityName}Mapper.deleteByExample(example) > 0){
+            return true;
+        }
+        return false;
+    }
+
+    //更新
+    public boolean Update(${entityName} info){
+        ${entityName}Example example = new ${entityName}Example();
+        example.createCriteria().andIdEqualTo(info.getId());
+        if (${entityName}Mapper.updateByExampleSelective(info, example) > 0){
+            return true;
+        }
+        return false;
+    }
+
+#if($entityName == "UserInfo")
+    //登录
+    public ${entityName} Login(String username, String password){
+        ${entityName}Example example = new ${entityName}Example();
+        example.createCriteria().andUserNameEqualTo(username).andUserPasswordEqualTo(password);
+        List<${entityName}> list = ${entityName}Mapper.selectByExample(example);
+        if (list.size() > 0){
+            return list.get(0);
+        }
+        return null;
+    }
+#end
+}
+

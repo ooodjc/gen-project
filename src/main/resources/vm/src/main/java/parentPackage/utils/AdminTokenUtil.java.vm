@@ -1,0 +1,51 @@
+package ${parentPackage}.utils;
+
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import java.util.Date;
+
+public class AdminTokenUtil {
+    private static final long EXPIRE_TIME= 60*60*24*1000; //1天
+    private static final String TOKEN_SECRET="admin-token123";  //密钥盐
+
+    public String GeneretorToken(String openid, String role){
+
+        String token = null;
+        try {
+            Date expiresAt = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+            token = JWT.create()
+                    .withClaim("id", openid)
+                    .withClaim("role", role)
+                    .withExpiresAt(expiresAt)
+                    // 使用了HMAC256加密算法。
+                    .sign(Algorithm.HMAC256(TOKEN_SECRET));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return token;
+    }
+
+    public boolean verify(String token){
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).build();
+            DecodedJWT jwt = verifier.verify(token);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+
+    }
+
+    public String getId(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).build();
+            DecodedJWT jwt = verifier.verify(token);
+            return jwt.getClaim("id").asString();
+        } catch (Exception e){
+            return null;
+        }
+    }
+}

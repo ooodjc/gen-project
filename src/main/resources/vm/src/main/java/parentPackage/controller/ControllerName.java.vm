@@ -1,0 +1,154 @@
+package ${parentPackage}.controller;
+
+import ${parentPackage}.entity.${entityName};
+import ${parentPackage}.service.${entityName}Service;
+#if($entityName == "UserInfo")
+import ${parentPackage}.utils.AdminTokenUtil;
+#end
+import ${parentPackage}.utils.Respond;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/admin/${entityName}")
+public class ${entityName}Controller {
+    @Autowired
+    private ${entityName}Service ${entityName}Service;
+
+    //所有数据
+    @RequestMapping("All")
+    public Respond All(){
+        Respond res = new Respond();
+        //获取数据
+        List<${entityName}> list = ${entityName}Service.Item();
+        //返回数据到前端
+        return res.ok(list);
+    }
+
+    //模糊搜索
+    @RequestMapping("Search")
+    public Respond Search(String key){
+        Respond res = new Respond();
+        //获取数据
+        List<${entityName}> list = ${entityName}Service.Search(key);
+        return res.ok(list);
+    }
+
+    //所有数据
+    @RequestMapping("Item")
+    public Respond Item(int page, int limit){
+        Respond res = new Respond();
+        //开启分页
+        PageHelper.startPage(page, limit);
+        //获取数据
+        List<${entityName}> list = ${entityName}Service.Item();
+        //组装分页数据
+        PageInfo<${entityName}> data = new PageInfo<>(list);
+        //返回数据到前端
+        return res.ok(data);
+    }
+
+    //新增
+    @RequestMapping("Add")
+    public Respond Add(@RequestBody ${entityName} info){
+        Respond res = new Respond();
+        info.setId(0);
+        boolean add = ${entityName}Service.Add(info);
+        if (!add){
+            return res.fail("名称已存在");
+        }
+        return res.ok(add);
+    }
+
+    //删除
+    @RequestMapping("Delete")
+    public Respond Delete(@RequestBody ${entityName} info){
+        Respond res = new Respond();
+        boolean delete = ${entityName}Service.Delete(info.getId());
+        return res.ok(delete);
+    }
+
+    //批量删除
+    @RequestMapping("Deletes")
+    public Respond Deletes(@RequestBody ${entityName}[] infos){
+        Respond res = new Respond();
+        boolean delete = ${entityName}Service.Delete(infos);
+        return res.ok(delete);
+    }
+
+    //更新
+    @RequestMapping("Update")
+    public Respond Update(@RequestBody ${entityName} info){
+        Respond res = new Respond();
+        boolean update = ${entityName}Service.Update(info);
+        return res.ok(update);
+    }
+
+#if($entityName == "UserInfo")
+    //登录
+    @RequestMapping("Login")
+    public Respond Login(@RequestBody Map<String,String> req){
+        Respond res = new Respond();
+        String userId = req.get("userId");
+        String userPwd = req.get("userPwd");
+        ${entityName} userInfo = ${entityName}Service.Login(userId,userPwd);
+        if (userInfo == null){
+            return res.fail("账号或密码错误");
+        }
+        //验证权限
+        if (!userInfo.getUserRole().equals("admin")) {
+            return res.fail("没有管理权限");
+        }
+        userInfo.setUserPassword("");
+
+        //生成token
+        AdminTokenUtil tokenUtil = new AdminTokenUtil();
+        String token = tokenUtil.GeneretorToken(userInfo.getUserId(),userInfo.getUserRole());
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("userInfo",userInfo);
+        data.put("token",token);
+        return res.ok(data);
+    }
+
+    //修改密码
+    @RequestMapping("ChangePassword")
+    public Respond ChangePassword(@RequestBody Map<String,Object> req){
+        Respond res = new Respond();
+        int id = (int)req.get("id");
+        String oldPwd = req.get("oldPwd").toString();
+        String newPwd = req.get("newPwd").toString();
+        UserInfo userInfo = UserInfoService.SelectId(id);
+        if (userInfo == null) {
+            return res.fail("用户id不存在");
+        }
+        if (!oldPwd.equals(userInfo.getUserPassword())){
+            return res.fail("原密码错误");
+        }
+        userInfo.setUserPassword(newPwd);
+        boolean update = UserInfoService.Update(userInfo);
+        return res.ok(update);
+    }
+
+    //新增
+    @RequestMapping("Register")
+    public Respond Register(@RequestBody UserInfo info){
+        Respond res = new Respond();
+        info.setId(0);
+        info.setUserRole("user");
+        boolean add = UserInfoService.Add(info);
+        if (!add){
+            return res.fail("名称已存在");
+        }
+        return res.ok(add);
+    }
+#end
+}

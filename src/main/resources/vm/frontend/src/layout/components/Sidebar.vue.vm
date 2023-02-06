@@ -1,0 +1,83 @@
+<template>
+  <el-scrollbar wrap-class="scrollbar-wrapper">
+    <el-menu
+      :default-active="onRoutes"
+      :collapse="collapse"
+      background-color="#545c64"
+      text-color="#bfcbd9"
+      active-text-color="#ffd04b"
+      unique-opened
+      router
+      class="el-menu-vertical"
+    >
+      <template v-for="item in sidebarList">
+        <el-sub-menu :index="item.pathName" v-if="item.subs && item.role.indexOf(userInfo.userRole) != -1">
+          <template #title>
+            <el-icon>
+              <component :is="item.icon" />
+            </el-icon>
+            <span>{{ item.title }}</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item v-for="subItem in item.subs" :index="subItem.index">{{ subItem.title }}</el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
+
+        <el-menu-item :index="item.pathName" v-else-if="item.role.indexOf(userInfo.userRole) != -1">
+          <el-icon>
+              <component :is="item.icon"></component>
+            </el-icon>
+          <template #title>{{ item.title }}</template>
+        </el-menu-item>
+      </template>
+    </el-menu>
+  </el-scrollbar>
+</template>
+
+<script setup>
+import viewApi from '@/utils/api/ViewInfoApi'
+const route = useRoute()
+const store = useStore()
+
+const sidebarList = ref([
+  {
+    icon: 'Document',
+    pathName: 'index',
+    title: '首页',
+    role: ['admin','user']
+  },
+
+])
+#*#foreach($item in $tables)
+    {
+            icon: 'Document',
+            pathName: '${item.entityName}',
+            title: '${item.entityName}',
+            role: ['admin','user']
+        },
+#end*#
+
+const onRoutes = computed(() => route.name)
+const collapse = computed(() => store.state.isCollapse)
+const userInfo = computed(() => store.state.userInfo)
+
+onMounted(() => {
+    getSiderbarList()
+})
+
+//获取菜单列表
+function getSiderbarList() {
+    viewApi.all().then(res => {
+      sidebarList.value.push(...res.data)
+    })
+}
+</script>
+
+<style>
+  .el-menu-vertical{
+    height: 100vh;
+  }
+  .el-menu-vertical:not(.el-menu--collapse) {
+    width: 200px;
+  }
+</style>

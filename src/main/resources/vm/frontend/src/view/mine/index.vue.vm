@@ -1,0 +1,153 @@
+<template>
+  <div class="container">
+    <div class="side">
+      <div class="logo-box">
+        <el-avatar :size="100" :src="data.circleUrl" />
+        <div style="text-align: center; margin-top: 30px; font-size: 22px; font-weight: 500;">{{ data.userInfo.userName }}</div>
+        <div style="display: flex; align-items: center; justify-content: center; margin-top: 30px; font-size: 18px; color: #515151;">
+          <el-icon><Avatar /></el-icon>
+          <div>{{ data.userInfo.userRole }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="app">
+      <div class="app-title">账号信息</div>
+      <div class="user-title">用户名</div>
+      <div class="user-value">{{ data.userInfo.userName }}</div>
+      <div class="user-title">密码</div>
+      <div class="user-value" style="display: flex;">
+        <div>******</div>
+        <div style="margin-left: auto; color: #409eff;" @click="data.isSetPwd = true">修改密码</div>
+      </div>
+    </div>
+  </div>
+
+  <el-dialog v-model="data.isSetPwd" title="修改密码" width="400px">
+    <el-form v-loading="data.loading" ref="ruleFormRef" :model="data.upDate" :rules="rules" label-width="80px">
+      <el-form-item label="原密码" prop="oldPwd">
+        <el-input type="password" v-model="data.upDate.oldPwd" />
+      </el-form-item>
+      <el-form-item label="新密码" prop="newPwd">
+        <el-input type="password" v-model="data.upDate.newPwd" />
+      </el-form-item>
+      <el-form-item label="确认密码" prop="newPwd2">
+        <el-input type="password" v-model="data.upDate.newPwd2" />
+      </el-form-item>
+      <el-form-item label-width="200px">
+        <el-button type="" @click="data.isSetPwd = false">取消</el-button>
+        <el-button type="primary" @click="Update(ruleFormRef)">确定</el-button>
+      </el-form-item>
+    </el-form>
+  </el-dialog>
+</template>
+
+<script setup name="Mine">
+import { storage } from '@/utils/storage'
+import api from '@/utils/api/UserInfoApi'
+import { ElMessage,ElMessageBox } from 'element-plus';
+
+const store = useStore()
+
+//表单校验状态
+const ruleFormRef = ref()
+//表单校验规则
+const rules = reactive({
+  oldPwd: [
+    { required: true, message: '必填', trigger: 'blur' },
+  ],
+  newPwd: [
+    { required: true, message: '必填', trigger: 'blur' },
+  ],
+  newPwd2: [
+    { required: true, message: '必填', trigger: 'blur' },
+  ],
+})
+
+let data = reactive({
+  dialogTableVisible: false,
+  circleUrl: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
+  userInfo: {},
+  roleName: "",
+  isSetPwd: false,
+  upDate: {
+    id: 0,
+    oldPwd: "",
+    newPwd: "",
+    newPwd2: "",
+  }
+})
+
+onMounted(() => {
+  data.roleItem = storage.get("roleItem")
+  data.userInfo = store.state.userInfo
+})
+
+async function Update(formEl){
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      //校验通过
+      console.log('submit!')
+      UpdateSetPwd()
+    } else {
+      //校验不通过
+      console.log('error submit!', fields)
+    }
+  })
+}
+
+function UpdateSetPwd(){
+  if(data.upDate.newPwd != data.upDate.newPwd2) {
+    ElMessageBox.alert("新密码不相同")
+    return
+  }
+  data.upDate.id = data.userInfo.id
+  api.ChangePassword(data.upDate).then(res => {
+    if(res.errno === 0){
+      ElMessage.success("操作成功");
+      data.isSetPwd = false
+    }else{
+      ElMessageBox.alert(res.errmsg)
+    }
+  })
+}
+</script>
+
+<style scoped>
+.container{
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.side{
+  width: 250px;
+  background-color: #eee;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+}
+.logo-box{
+  margin-top: 100px;
+}
+.app{
+  width: 70%;
+  margin-left: 20px;
+}
+.app-title{
+  display: flex;
+  align-items: center;
+  height: 80px;
+  border-bottom: 3px solid #f2f2f2;
+  color: #4D70FF;
+}
+.user-title{
+  margin-top: 30px;
+  color: #696969;
+  font-size: 22px;
+}
+.user-value{
+  margin-top: 10px;
+  color: #A9A9A9;
+  font-size: 18px;
+}
+</style>

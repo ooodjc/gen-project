@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: dev
+  resources:
+    static-locations:
+    - classpath:static/
+    - file:static/
+  thymeleaf:
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/static/admin-ui/
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: ${parentPackage}.entity

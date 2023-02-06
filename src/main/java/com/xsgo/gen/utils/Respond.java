@@ -1,0 +1,99 @@
+package com.xsgo.gen.utils;
+public class Respond<T> {
+    private int errno = 0;
+    private String errmsg = "操作成功";
+    private T data;
+
+    public Respond ok() {
+        return this;
+    }
+
+    public Respond ok(T data) {
+        this.data = data;
+        return this;
+    }
+
+    public Respond ok(T data, String errmsg) {
+        this.data = data;
+        this.errmsg = errmsg;
+        return this;
+    }
+
+    public Respond fail() {
+        this.errno = 1;
+        this.errmsg = "操作失败";
+        return this;
+    }
+
+    public Respond fail(String errmsg) {
+        this.errno = 1;
+        this.errmsg = errmsg;
+        return this;
+    }
+
+    public Respond fail(int errno,String errmsg) {
+        this.errno = errno;
+        this.errmsg = errmsg;
+        return this;
+    }
+
+    //无权访问
+    public Respond noAuth() {
+        this.errno = 401;
+        this.errmsg = "无权访问";
+        return this;
+    }
+
+    //未注册
+    public Respond noRegister() {
+        this.errno = 402;
+        this.errmsg = "未注册";
+        return this;
+    }
+
+    public Respond noRegister(T data) {
+        this.errno = 402;
+        this.data = data;
+        this.errmsg = "未注册";
+        return this;
+    }
+
+    //token错误
+    public Respond tokenErr() {
+        this.errno = 403;
+        this.errmsg = "token错误";
+        return this;
+    }
+
+    //已删除
+    public Respond noUser(){
+        this.errno = 405;
+        this.errmsg = "用户已删除";
+        return this;
+    }
+
+    public int getErrno() {
+        return errno;
+    }
+
+    public void setErrno(int errno) {
+        this.errno = errno;
+    }
+
+    public String getErrmsg() {
+        return errmsg;
+    }
+
+    public void setErrmsg(String errmsg) {
+        this.errmsg = errmsg;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+}

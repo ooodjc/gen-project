@@ -1,0 +1,47 @@
+import http from "@/utils/request"
+export default {
+    //全部列表
+    all(data = {}){
+        return http.get('${entityName}/All',data)
+    },
+    //列表
+    item(data = {}){
+        return http.get('${entityName}/Item',data)
+    },
+    //模糊搜索
+    search(data = {}){
+        return http.get('${entityName}/Search',data)
+    },
+    //按id查询
+    selectId(data = {}){
+        return http.get('${entityName}/SelectId',data)
+    },
+    //新增信息
+    add(data = {}){
+        return http.post('${entityName}/Add',data)
+    },
+    //更新信息
+    update(data = {}){
+        return http.post('${entityName}/Update',data)
+    },
+    //删除
+    delete(data = {}){
+        return http.post('${entityName}/Delete',data)
+    },
+    //批量删除
+    deletes(data = {}){
+        return http.post('${entityName}/Deletes',data)
+    },
+#if($entityName == 'UserInfo')
+    login(data = {}){
+        return http.post('UserInfo/Login',data)
+    },
+    //用户注册
+    Register(data = {}){
+        return http.post('UserInfo/Register',data)
+    },
+    ChangePassword(data = {}){
+        return http.post('UserInfo/ChangePassword',data)
+    },
+#end
+}

@@ -1,0 +1,56 @@
+import { createRouter,createWebHashHistory} from "vue-router";
+
+/* Layout */
+import Layout from '@/layout/index.vue'
+
+//侧边栏路由必须含有children
+const routes = [
+    {
+		path: '/',
+		redirect: '/index',
+	},
+    {
+        path: '/',
+        name: 'Layout',
+        component: Layout,
+        children: [
+            {
+                path: "/index",
+                name: "index",
+                component: () => import('@/view/index/index.vue'),
+                meta: { title: '首页', icon: 'Document'}
+            },
+            {
+                path: "/mine",
+                name: "Mine",
+                component: () => import('@/view/mine/index.vue'),
+                meta: { title: 'UserInfo', icon: 'Document'}
+            },
+#foreach($item in $tables)
+            {
+                path: "/${item.entityName}",
+                name: "${item.entityName}",
+                component: () => import('@/view/${item.entityName}/index.vue'),
+                meta: { title: '${item.entityName}', icon: 'Document'}
+            },
+#end
+        ]
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/view/login/index.vue'),
+    },
+]
+
+export const router = createRouter({
+    history: createWebHashHistory(),
+    routes: routes
+})
+
+//路由守卫
+router.beforeEach((to, from, next) => {
+    next()
+});
+
+export default router

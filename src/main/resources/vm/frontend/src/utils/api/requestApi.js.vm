@@ -32,16 +32,16 @@ export default {
     deletes(data = {}){
         return http.post('${entityName}/Deletes',data)
     },
-#if($entityName == 'UserInfo')
+#if($entityName == 'SysUser')
     login(data = {}){
-        return http.post('UserInfo/Login',data)
+        return http.post('SysUser/Login',data)
     },
     //用户注册
     Register(data = {}){
-        return http.post('UserInfo/Register',data)
+        return http.post('SysUser/Register',data)
     },
     ChangePassword(data = {}){
-        return http.post('UserInfo/ChangePassword',data)
+        return http.post('SysUser/ChangePassword',data)
     },
 #end
 }

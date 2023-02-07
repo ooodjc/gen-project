@@ -32,7 +32,7 @@
 
 <script setup name="login">
 import { ref, reactive,onMounted} from 'vue'
-import api from '@/utils/api/UserInfoApi'
+import api from '@/utils/api/SysUserApi'
 import { ElMessage,ElMessageBox } from 'element-plus'
 import router from '@/route'
 import { storage } from '@/utils/storage'

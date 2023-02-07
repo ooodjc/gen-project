@@ -29,7 +29,7 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 
-const indexRoute = router.options.routes.filter(item => item.name == 'Layout')[0].children.filter(item => item.name == 'Index')[0]
+const indexRoute = router.options.routes.filter(item => item.name == 'Layout')[0].children.filter(item => item.name == 'index')[0]
 const onRoutes = computed(() => route.name)
 const collapse = computed(() => store.state.isCollapse)
 //用户路由

@@ -19,7 +19,7 @@
     </el-menu-item>
 </template>
 <script setup>
-import SubMenuVue from './SubMenu.vue.vm'
+import SubMenuVue from './SubMenu.vue'
 const props = defineProps({
     item: {
         type: Object,

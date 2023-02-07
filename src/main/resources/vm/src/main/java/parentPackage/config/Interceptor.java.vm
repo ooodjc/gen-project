@@ -27,8 +27,8 @@ public class Interceptor implements WebMvcConfigurer {
         InterceptorRegistration adminRegistration = registry.addInterceptor(adminInterceptor());
         adminRegistration.addPathPatterns("/admin/**");                      //所有路径都被拦截
         adminRegistration.excludePathPatterns(                         //添加不拦截路径
-                "/admin/UserInfo/Login",
-                "/admin/UserInfo/Register"
+                "/admin/SysUser/Login",
+                "/admin/SysUser/Register"
         );
     }
 }

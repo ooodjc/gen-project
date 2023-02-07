@@ -4,6 +4,7 @@ import ${parentPackage}.entity.${entityName};
 import ${parentPackage}.service.${entityName}Service;
 #if($entityName == "UserInfo")
 import ${parentPackage}.utils.AdminTokenUtil;
+import ${parentPackage}.utils.AdminTokenUtil;
 #end
 import ${parentPackage}.utils.Respond;
 import com.github.pagehelper.PageHelper;

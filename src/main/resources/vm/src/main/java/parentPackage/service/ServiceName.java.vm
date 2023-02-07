@@ -70,7 +70,7 @@ public class ${entityName}Service {
         return false;
     }
 
-#if($entityName == "UserInfo")
+#if($entityName == "SysUser")
     //登录
     public ${entityName} Login(String username, String password){
         ${entityName}Example example = new ${entityName}Example();

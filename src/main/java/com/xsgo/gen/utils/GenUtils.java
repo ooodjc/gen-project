@@ -105,6 +105,7 @@ public class GenUtils {
         templates.add("vm/frontend/src/layout/components/Sidebar.vue.vm");
         templates.add("vm/frontend/src/layout/components/TagsTemp.vue.vm");
         templates.add("vm/frontend/src/layout/components/UserInfo.vue.vm");
+        templates.add("vm/frontend/src/layout/components/SubMenu.vue.vm");
         //src/route
         templates.add("vm/frontend/src/route/index.js.vm");
         //src/store

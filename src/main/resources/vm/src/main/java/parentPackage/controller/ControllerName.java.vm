@@ -92,7 +92,7 @@ public class ${entityName}Controller {
         return res.ok(update);
     }
 
-#if($entityName == "UserInfo")
+#if($entityName == "SysUser")
     //登录
     @RequestMapping("Login")
     public Respond Login(@RequestBody Map<String,String> req){
@@ -102,10 +102,6 @@ public class ${entityName}Controller {
         ${entityName} userInfo = ${entityName}Service.Login(userId,userPwd);
         if (userInfo == null){
             return res.fail("账号或密码错误");
-        }
-        //验证权限
-        if (!userInfo.getUserRole().equals("admin")) {
-            return res.fail("没有管理权限");
         }
         userInfo.setUserPassword("");
 
@@ -126,7 +122,7 @@ public class ${entityName}Controller {
         int id = (int)req.get("id");
         String oldPwd = req.get("oldPwd").toString();
         String newPwd = req.get("newPwd").toString();
-        UserInfo userInfo = UserInfoService.SelectId(id);
+        ${entityName} userInfo = ${entityName}Service.SelectId(id);
         if (userInfo == null) {
             return res.fail("用户id不存在");
         }
@@ -134,17 +130,17 @@ public class ${entityName}Controller {
             return res.fail("原密码错误");
         }
         userInfo.setUserPassword(newPwd);
-        boolean update = UserInfoService.Update(userInfo);
+        boolean update = ${entityName}Service.Update(userInfo);
         return res.ok(update);
     }
 
     //新增
     @RequestMapping("Register")
-    public Respond Register(@RequestBody UserInfo info){
+    public Respond Register(@RequestBody ${entityName} info){
         Respond res = new Respond();
         info.setId(0);
         info.setUserRole("user");
-        boolean add = UserInfoService.Add(info);
+        boolean add = ${entityName}Service.Add(info);
         if (!add){
             return res.fail("名称已存在");
         }

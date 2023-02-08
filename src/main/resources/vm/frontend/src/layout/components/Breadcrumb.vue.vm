@@ -2,7 +2,7 @@
     <el-breadcrumb :separator-icon="ArrowRight">
         <el-breadcrumb-item :to="{ path: '/index' }">首页</el-breadcrumb-item>
         <template v-for="(item,index) in breadList" :key="index">
-            <el-breadcrumb-item :to="{ path: item.path }" v-if="item.name && item.meta.title && item.path !== '/index'">
+          <el-breadcrumb-item :to="{ path: item.component != undefined ? item.path:'' }" v-if="item.name && item.meta.title && item.path !== '/index'">
                 {{ item.meta.title }}
             </el-breadcrumb-item>
         </template>

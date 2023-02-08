@@ -44,4 +44,10 @@ export default {
         return http.post('SysUser/ChangePassword',data)
     },
 #end
+#if($entityName == 'SysRoute')
+    //按权限获取路由
+    getRoute(data = {}){
+        return http.get('SysRoute/GetRoute',data)
+    },
+#end
 }

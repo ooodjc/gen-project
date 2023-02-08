@@ -27,6 +27,7 @@
     store.commit('setUserInfo', {})
     storage.set("token", '')
     store.commit('clearTabList')
+    store.commit("clearUserRoutes")
     router.push('/login')
   }
 

@@ -2,9 +2,12 @@ package ${parentPackage}.controller;
 
 import ${parentPackage}.entity.${entityName};
 import ${parentPackage}.service.${entityName}Service;
-#if($entityName == "UserInfo")
+#if($entityName == "SysUser")
 import ${parentPackage}.utils.AdminTokenUtil;
 import ${parentPackage}.utils.AdminTokenUtil;
+#end
+#if($entityName == "SysRoute")
+import javax.servlet.http.HttpServletRequest;
 #end
 import ${parentPackage}.utils.Respond;
 import com.github.pagehelper.PageHelper;
@@ -146,6 +149,18 @@ public class ${entityName}Controller {
             return res.fail("名称已存在");
         }
         return res.ok(add);
+    }
+#end
+#if($entityName == "SysRoute")
+    //按权限获取路由
+    @RequestMapping("GetRoute")
+    public Respond GetRoute(HttpServletRequest request){
+        String roleId = request.getAttribute("roleId").toString();
+        System.out.println("roleId" + roleId);
+        Respond res = new Respond();
+        //获取数据
+        List<SysRoute> list = SysRouteService.SelectRole(roleId);
+        return res.ok(list);
     }
 #end
 }

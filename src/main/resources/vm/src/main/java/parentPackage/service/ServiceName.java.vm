@@ -82,5 +82,13 @@ public class ${entityName}Service {
         return null;
     }
 #end
+#if($entityName == "SysRoute")
+    //按权限查询
+    public List<SysRoute> SelectRole(String roleid){
+        SysRouteExample example = new SysRouteExample();
+        example.createCriteria().andRolesLike("%" +roleid + "%").andIsStatusEqualTo(true);
+        return SysRouteMapper.selectByExample(example);
+    }
+#end
 }
 

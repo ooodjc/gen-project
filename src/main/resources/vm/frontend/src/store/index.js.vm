@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import { storage } from '@/utils/storage'
+import router from "@/route"
 
 // 创建一个新的 store 实例
 const store = createStore({
@@ -35,7 +36,16 @@ const store = createStore({
     setUserRoutes(state, data){
       state.userRoutes = data
       storage.set('userRoutes', data)
+      //添加到路由
+      data.map(item => {
+        router.addRoute('Layout', item)
+      })
     },
+    //清除userRoutes
+    clearUserRoutes(state){
+      state.userRoutes = []
+      storage.remove('userRoutes')
+    }
   }
 })
 export default store

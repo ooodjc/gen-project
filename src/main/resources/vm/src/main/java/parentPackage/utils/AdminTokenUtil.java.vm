@@ -48,4 +48,14 @@ public class AdminTokenUtil {
             return null;
         }
     }
+
+    public String getRoleId(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).build();
+            DecodedJWT jwt = verifier.verify(token);
+            return jwt.getClaim("role").asString();
+        } catch (Exception e){
+            return null;
+        }
+    }
 }

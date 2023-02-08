@@ -23,6 +23,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         }
         String id = tokenUtil.getId(token);
         request.setAttribute("id",id);
+        request.setAttribute("roleId",tokenUtil.getRoleId(token));
         return true;
     }
 

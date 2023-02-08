@@ -115,6 +115,7 @@ public class GenUtils {
         templates.add("vm/frontend/src/utils/request/index.js.vm");
         templates.add("vm/frontend/src/utils/request/request.js.vm");
         templates.add("vm/frontend/src/utils/storage/index.js.vm");
+        templates.add("vm/frontend/src/utils/genRoutes/index.js.vm");
         //src/view
         templates.add("vm/frontend/src/view/index/index.vue.vm");
         templates.add("vm/frontend/src/view/login/index.vue.vm");

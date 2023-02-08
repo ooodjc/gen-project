@@ -6,7 +6,7 @@ import router from "@/route"
 const store = createStore({
   state () {
     return {
-      isCollapse: storage.get('isCollapse') || true,
+      isCollapse: storage.get('isCollapse') || false,
       userInfo: storage.get('userInfo') || {},
       tabList: [],
       //动态路由

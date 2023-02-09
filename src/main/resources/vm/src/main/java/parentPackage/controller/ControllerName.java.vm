@@ -156,7 +156,6 @@ public class ${entityName}Controller {
     @RequestMapping("GetRoute")
     public Respond GetRoute(HttpServletRequest request){
         String roleId = request.getAttribute("roleId").toString();
-        System.out.println("roleId" + roleId);
         Respond res = new Respond();
         //获取数据
         List<SysRoute> list = SysRouteService.SelectRole(roleId);

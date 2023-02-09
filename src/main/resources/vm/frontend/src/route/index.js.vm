@@ -1,5 +1,5 @@
 import { createRouter,createWebHistory} from "vue-router";
-
+import getRoute from '@/utils/getRoute'
 /* Layout */
 import Layout from '@/layout/index.vue'
 
@@ -50,6 +50,15 @@ export const router = createRouter({
 
 //路由守卫
 router.beforeEach((to, from, next) => {
+    if(router.getRoutes().findIndex(item => item.path === to.path) !== -1){
+        next()
+        return
+    }else{
+        let r = getRoute(to.path)
+        r.component = () => import(`../view/${r.componentstr}/index.vue`)
+        router.addRoute('Layout', r)
+        next(r)
+    }
     next()
 });
 

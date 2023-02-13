@@ -57,11 +57,11 @@ CREATE TABLE `sys_route`  (
 -- ----------------------------
 -- Records of sys_route
 -- ----------------------------
-INSERT INTO `sys_route` VALUES (1, '系统管理', 0, 1, 'SysRoute', '', 1, 1, '1,2', 'Document', NULL);
-INSERT INTO `sys_route` VALUES (2, '用户管理', 0, 2, 'SysUser', '', 1, 1, '1,2', 'Document', NULL);
-INSERT INTO `sys_route` VALUES (3, '路由管理', 1, 1, 'SysRoute1', 'SysRoute', 1, 1, '1,2', 'Document', NULL);
-INSERT INTO `sys_route` VALUES (4, '用户管理1', 2, 1, 'SysUser1', 'SysUser', 1, 1, '1,2', 'Document', NULL);
-INSERT INTO `sys_route` VALUES (5, '权限管理', 0, 3, 'SysRole', 'SysRole', 1, 1, '1,2', 'Document', NULL);
+INSERT INTO `sys_route` VALUES (1, '系统管理', 0, 1, 'Sys', '', 1, 1, '1,2', 'Document', NULL);
+INSERT INTO `sys_route` VALUES (2, '用户管理', 0, 2, 'User', '', 1, 1, '1,2', 'Document', NULL);
+INSERT INTO `sys_route` VALUES (101, '路由管理', 1, 1, 'SysRoute', 'SysRoute', 1, 1, '1,2', 'Document', NULL);
+INSERT INTO `sys_route` VALUES (102, '用户管理1', 1, 2, 'SysUser', 'SysUser', 1, 1, '1,2', 'Document', NULL);
+INSERT INTO `sys_route` VALUES (103, '权限管理', 1, 3, 'SysRole', 'SysRole', 1, 1, '1,2', 'Document', NULL);
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -82,6 +82,5 @@ CREATE TABLE `sys_user`  (
 -- ----------------------------
 INSERT INTO `sys_user` VALUES (1, 'admin', '管理员', 'admin', '2');
 INSERT INTO `sys_user` VALUES (2, 'user', 'user', 'user', '1');
-INSERT INTO `sys_user` VALUES (4, 'admin1', '管理员1', 'admin', '2');
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -1,0 +1,51 @@
+import { createStore } from 'vuex'
+import { storage } from '@/utils/storage'
+import router from "@/route"
+
+// 创建一个新的 store 实例
+const store = createStore({
+  state () {
+    return {
+      isCollapse: storage.get('isCollapse') || false,
+      userInfo: storage.get('userInfo') || {},
+      tabList: [],
+      //动态路由
+      userRoutes: storage.get('userRoutes') || []
+    }
+  },
+  mutations: {
+    setUserInfo(state,val){
+      storage.set('userInfo',val)
+      state.userInfo = val
+    },
+    onIsCollapse(state,val){
+      state.isCollapse = val
+    },
+    addTabListItem(state, data){
+      const names = state.tabList.map(item => item.name)
+      if(names.indexOf(data.name) == -1){
+        state.tabList.push(data)
+      }
+    },
+    delTabListItem(state, path) {
+      state.tabList = state.tabList.filter(item => item.path != path);
+    },
+    clearTabList(state){
+      state.tabList = state.tabList.filter(item => item.name === 'index')
+    },
+    setUserRoutes(state, data){
+      state.userRoutes = data
+      storage.set('userRoutes', data)
+      //添加到路由
+      data.map(item => {
+        router.addRoute('Layout', item)
+      })
+    },
+    //清除userRoutes
+    clearUserRoutes(state){
+      state.userRoutes = []
+      storage.remove('userRoutes')
+    }
+  }
+})
+export default store

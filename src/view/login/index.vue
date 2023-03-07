@@ -1,0 +1,171 @@
+<template>
+  <div class="container" style="height: 100%; background-color: #303133;">
+    <div class="center-box" :style="{'height': data.isLogin ? '200px':'400px'}">
+      <div>{{ data.isLogin ? '用户登录':'用户注册' }}</div>
+      <div class="center2">
+        <el-form class="form" ref="formRef" :model="loginInfo" :rules="rules" style="color: #ffffff;">
+          <el-form-item prop="userId">
+            <span>账号</span>
+            <el-input type="text" style="width: 85%; margin-left: auto;" placeholder="请输入帐号" v-model="loginInfo.userId"></el-input>
+          </el-form-item>
+          <el-form-item prop="userName" v-if="!data.isLogin">
+            <span>姓名</span>
+            <el-input type="text" style="width: 85%; margin-left: auto;" placeholder="请输入姓名" v-model="loginInfo.userName"></el-input>
+          </el-form-item>
+          <el-form-item prop="userPwd">
+            <span>密码</span>
+            <el-input type="password" style="width: 85%; margin-left: auto;" placeholder="请输入密码" v-model="loginInfo.userPwd"></el-input>
+          </el-form-item>
+          <el-form-item prop="userPwd2" v-if="!data.isLogin">
+            <span>密码</span>
+            <el-input type="password" style="width: 85%; margin-left: auto;" placeholder="请再次输入密码" v-model="loginInfo.userPwd2"></el-input>
+          </el-form-item>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <el-button :type="data.isLogin ? 'primary':'info'" @click="onLogin(formRef)">登录</el-button>
+            <el-button :type="!data.isLogin ? 'primary':'info'" @click="onRegister(formRef)">注册</el-button>
+          </div>
+        </el-form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup name="login">
+import { ref, reactive,onMounted} from 'vue'
+import SysUserApi from '@/utils/api/SysUserApi'
+import SysRouteApi from '@/utils/api/SysRouteApi'
+import { ElMessage,ElMessageBox } from 'element-plus'
+import router from '@/route'
+import { storage } from '@/utils/storage'
+import store from '@/store'
+import genRoutes from '@/utils/genRoutes'
+
+const loginInfo = reactive({
+  userId: "",
+  userPwd: "",
+  userName: "",
+  userPwd2: "",
+})
+let data = reactive({
+  isLogin: true,
+})
+
+//表单校验状态
+const formRef = ref()
+
+//表单校验规则
+const rules = reactive({
+  userId: [
+    { required: true, message: '必填', trigger: 'blur' },
+  ],
+  userPwd: [
+    { required: true, message: '必填', trigger: 'blur' },
+  ],
+  userPwd2: [
+    { required: true, message: '必填', trigger: 'blur' },
+  ],
+  userName: [
+    { required: true, message: '必填', trigger: 'blur' },
+  ],
+})
+
+onMounted(() => {
+
+})
+
+function onLogin(formEl){
+  if(!data.isLogin){
+    data.isLogin = true
+    return
+  }
+
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      SysUserApi.login(loginInfo).then(res => {
+        if(res.errno === 0){
+          //本地储存token
+          storage.set("token",res.data.token)
+          store.commit("setUserInfo",res.data.userInfo)
+          setUserRoute()
+          ElMessage('登录成功')
+          router.push('/index')
+        }else{
+          ElMessageBox.alert(res.errmsg)
+        }
+      })
+    } else {
+      ElMessageBox.alert('请填写完整信息')
+      //return false
+    }
+  })
+}
+
+function onRegister(formEl){
+  if(data.isLogin){
+    data.isLogin = false
+    return
+  }
+  if (!formEl) return
+  formEl.validate((valid) => {
+    if (valid) {
+      if (loginInfo.userPwd != loginInfo.userPwd2) {
+        ElMessageBox.alert("两次输入密码不同")
+        return
+      }
+      loginInfo.userPhoneNumber = loginInfo.userId
+      loginInfo.userPassword = loginInfo.userPwd
+      SysUserApi.Register(loginInfo).then(res => {
+        if(res.errno === 0){
+          data.isLogin = true
+          ElMessage('注册成功')
+        }else{
+          ElMessageBox.alert(res.errmsg)
+        }
+      })
+    } else {
+      ElMessageBox.alert('请填写完整信息')
+      //return false
+    }
+  })
+}
+
+//设置用户路由
+function setUserRoute(){
+  SysRouteApi.getRoute().then(res => {
+    if(res.errno === 0){
+      console.log(genRoutes(res.data))
+      store.commit("setUserRoutes", genRoutes(res.data))
+    }
+  })
+}
+</script>
+
+<style scoped>
+.form {
+  width: 360px;
+  padding: 20px;
+  border-radius: 10px;
+}
+.el-form {
+  width: 250px;
+}
+.center-box{
+  margin: auto;
+  position:absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  background-color: #545c64;
+  border-radius: 10px;
+  padding: 10px;
+  color: #ffffff;
+}
+.item .el-form-item__label{
+  color:#f56c6c;
+  font-weight:bold;
+  font-size:20px
+}
+</style>

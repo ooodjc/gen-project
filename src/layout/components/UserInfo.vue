@@ -1,0 +1,46 @@
+<template>
+  <div class="user-info">
+    <el-dropdown @command="handleCommand">
+      <div style="display: flex; align-items: center;">
+        <el-icon><UserFilled /></el-icon>
+        <div style="margin-left: 10px;">{{ userInfo.userName }}</div>
+      </div>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item command="a" @click="ToUserInfo">个人信息</el-dropdown-item>
+          <el-dropdown-item command="e" divided @click="OutLogin">退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </div>
+</template>
+
+<script setup>
+  import { storage } from '@/utils/storage'
+
+  const router = useRouter()
+  const store = useStore()
+
+  const userInfo = computed(() => store.state.userInfo)
+
+  function OutLogin(){
+    store.commit('setUserInfo', {})
+    storage.set("token", '')
+    store.commit('clearTabList')
+    store.commit("clearUserRoutes")
+    router.push('/login')
+  }
+
+  function ToUserInfo(){
+    router.push('/mine')
+  }
+</script>
+
+<style lang="scss" scoped>
+  .user-info{
+    margin-left: auto;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+  }
+</style>

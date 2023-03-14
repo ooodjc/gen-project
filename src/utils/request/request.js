@@ -11,7 +11,7 @@ export function request(options) {
   // 请求拦截器配置
   instance.interceptors.request.use(config => {
       // config.headers.Authorization = window.sessionStorage.getItem('token')
-      config.headers['X-Token'] = storage.get('token')
+      config.headers['X-Token'] = storage.get('token') || 'token is null'
       return config
     }, error => {
       console.log(error)

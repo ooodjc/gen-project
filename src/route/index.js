@@ -43,7 +43,7 @@ export const router = createRouter({
 
 //路由守卫
 router.beforeEach((to, from, next) => {
-    if(router.getRoutes().findIndex(item => item.path === to.path) !== -1){
+    /* if(router.getRoutes().findIndex(item => item.path === to.path) !== -1){
         next()
         return
     }else{
@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
         r.component = () => import(`../view/${r.componentstr}/index.vue`)
         router.addRoute('Layout', r)
         next(r)
-    }
+    } */
     next()
 });
 

@@ -6,7 +6,7 @@ export default {
     },
     //列表
     item(data = {}){
-        return http.get('${entityName}/Item',data)
+        return http.post('${entityName}/Item',data)
     },
     //模糊搜索
     search(data = {}){

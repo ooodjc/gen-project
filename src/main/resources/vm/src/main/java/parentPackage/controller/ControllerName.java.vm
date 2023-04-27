@@ -15,6 +15,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -47,13 +48,15 @@ public class ${entityName}Controller {
     }
 
     //所有数据
-    @RequestMapping("Item")
-    public Respond Item(int page, int limit){
+    @PostMapping("Item")
+    public Respond Item(@RequestBody Map<String, Object> params){
         Respond res = new Respond();
         //开启分页
-        PageHelper.startPage(page, limit);
+        PageHelper.startPage((int)params.get("page"), (int)params.get("limit"));
+        //Object to Map,params.get("query") is a Map
+        Map<String, Object> query = (Map<String, Object>) params.get("query");
         //获取数据
-        List<${entityName}> list = ${entityName}Service.Item();
+        List<${entityName}> list = ${entityName}Service.Item(query);
         //组装分页数据
         PageInfo<${entityName}> data = new PageInfo<>(list);
         //返回数据到前端

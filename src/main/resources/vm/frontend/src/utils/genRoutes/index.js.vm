@@ -16,6 +16,7 @@ function formatToTree(ary, pid) {
         return {
             path: "/" + item.path,
             name: item.path,
+            componentstr: item.component,
             component: item.component !== "" ? () => import(`../../view/${item.component}/index.vue`) : undefined,
             meta: { title: item.routeName, icon: item.icon},
             children: formatToTree(ary, item.id)

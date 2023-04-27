@@ -69,6 +69,10 @@ public class GenUtils {
         //vue
         templates.add("vm/frontend/src/utils/api/requestApi.js.vm");
         templates.add("vm/frontend/src/view/viewFolderName/index.vue.vm");
+        templates.add("vm/frontend/src/view/viewFolderName/components/AddDialog.vue.vm");
+        templates.add("vm/frontend/src/view/viewFolderName/components/EditDialog.vue.vm");
+        templates.add("vm/frontend/src/view/viewFolderName/components/SearchTemp.vue.vm");
+        templates.add("vm/frontend/src/view/viewFolderName/components/TableTemp.vue.vm");
         return templates;
     }
     public static List<String> getOtherTemplates(){

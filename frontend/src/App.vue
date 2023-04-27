@@ -3,6 +3,7 @@
     <div class="title">项目生成器</div>
     <TableForm v-model="data.formData" />
     <TableList :dataList="data.tableListData" @change="setTableList" />
+    <tableInfoList :dataList="data.tableInfos" />
     <div class="btn-row">
       <el-button type="primary" @click="gen">生成</el-button>
     </div>
@@ -13,6 +14,7 @@
 import TableList from '@/components/tableList.vue';
 import api from '@/utils/api'
 import TableForm from '@/components/tableForm.vue';
+import tableInfoList from './components/tableInfoList.vue';
 
 const data = reactive({
   databaseName: "",
@@ -21,7 +23,8 @@ const data = reactive({
     databaseName: "",
     parentPackage: 'com.xsgo.demo',
     tables: [],
-  }
+  },
+  tableInfos: [],
 })
 
 onMounted(() => {
@@ -34,6 +37,13 @@ function getDataList(){
     if(res.errno === 0){
       data.formData.databaseName = res.data.databaseName
       data.tableListData = res.data.tableNames
+      res.data.tableNames.map(item => {
+        data.tableInfos.push({
+          tableName: item,          //表名
+          tableComment: null,       //表注释
+          tableFields: [],          //表字段
+        })
+      })
     }
   })
 }

@@ -8,7 +8,7 @@ const store = createStore({
     return {
       isCollapse: storage.get('isCollapse') || false,
       userInfo: storage.get('userInfo') || {},
-      tabList: [],
+      tabList: storage.get('tabList') || [],
       //动态路由
       userRoutes: storage.get('userRoutes') || []
     }
@@ -25,10 +25,12 @@ const store = createStore({
       const names = state.tabList.map(item => item.name)
       if(names.indexOf(data.name) == -1){
         state.tabList.push(data)
+        storage.set('tabList', state.tabList)
       }
     },
     delTabListItem(state, path) {
       state.tabList = state.tabList.filter(item => item.path != path);
+      storage.set('tabList', state.tabList)
     },
     clearTabList(state){
       state.tabList = state.tabList.filter(item => item.name === 'index')

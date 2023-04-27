@@ -1,0 +1,43 @@
+<template>
+    <el-form inline label-width="70px"  class="demo-form-inline">
+        <el-form-item label="名称">
+            <el-input v-model="data.searchData.searchValue" placeholder="请输入名称"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="query">查询</el-button>
+        </el-form-item>
+    </el-form>
+</template>
+
+<script setup>
+const props = defineProps({
+    modelValue: {
+        type: String,
+        default: '',
+        required: false
+    }
+})
+
+const data = reactive({
+    searchData: {},
+})
+
+const emit = defineEmits(['update:modelValue', 'change'])
+
+const query = () => {
+    emit('update:modelValue', data.searchData)
+    emit('change')
+}
+</script>
+
+<style scoped lang="scss">
+.demo-form-inline {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    .el-form-item{
+        margin-bottom: 0;
+        padding: 10px;
+    }
+}
+</style>

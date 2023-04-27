@@ -19,4 +19,4 @@ spring:
 
 logging:
   level:
-    com.app.mapper: debug
+      ${parentPackage}.mapper: debug

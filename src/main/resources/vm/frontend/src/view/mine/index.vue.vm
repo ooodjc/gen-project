@@ -43,7 +43,7 @@
 
 <script setup name="Mine">
 import { storage } from '@/utils/storage'
-import api from '@/utils/api/UserInfoApi'
+import api from '@/utils/api/SysUserApi'
 import { ElMessage,ElMessageBox } from 'element-plus';
 
 const store = useStore()

@@ -1,0 +1,103 @@
+<template>
+    <ListViewTempVue 
+    title="${entityName}"
+    searchPlaceholder="请输入名称或分类"
+    searchApi="search"
+    itemApi="item"
+    addApi="add"
+    deleteApi="delete"
+    deletesApi="deletes"
+    updateApi="update"
+    :api="${entityName}Api"
+    :tableColumns="data.itemTableColumns"
+    v-model:editInfo="data.editInfo"
+    :rules="rules"
+    :computeds="data.computeds"
+    @change="change"
+    dialogWidth="800px"
+    >
+        <template #editForm>
+#foreach($item in $columns)
+#if($item.javaName != "id")
+            <el-form-item label="${item.comment}" prop="${item.javaName}" :label-width="data.labelWidth">
+                <el-input v-model="data.editInfo.${item.javaName}" />
+            </el-form-item>
+#end
+#end
+        </template>
+
+        <template #addForm>
+#foreach($item in $columns)
+#if($item.javaName != "id")
+            <el-form-item label="${item.comment}" prop="${item.javaName}" :label-width="data.labelWidth">
+                <el-input v-model="data.editInfo.${item.javaName}" />
+            </el-form-item>
+#end
+#end
+        </template>
+    </ListViewTempVue>
+</template>
+
+<script setup name="${entityName}">
+import ListViewTempVue from '@/components/ListViewTemp.vue';
+import ${entityName}Api from '@/utils/api/${entityName}Api.js'
+#if($entityName == "SysRoute")
+import store from '@/store'
+import genRoutes from '@/utils/genRoutes'
+#end
+
+//表单校验规则
+const rules = reactive({
+#foreach($item in $columns)
+#if($item.javaName != "id")
+    ${item.javaName}: [
+        { required: false, message: '必填', trigger: 'blur' },
+    ],
+#end
+#end
+})
+
+const data = reactive({
+    labelWidth: "80px",
+    itemTableColumns: [
+#foreach($item in $columns)
+#if($item.javaName != "id")
+        {prop: '${item.javaName}', label: '${item.comment}', width: '120px', isComputed: false, computed: 'computed'},
+#end
+#end
+    ],
+    editInfo: {},
+    computeds: {
+        computed: row => row.isTrue ? '是':'否'
+    }
+})
+
+onMounted(() => {
+})
+
+//子组件回调
+function change(val){
+    switch(val){
+        case 'edit':
+#if($entityName == "SysRoute")
+            setUserRoute()
+#end
+            break
+        case 'add':
+#if($entityName == "SysRoute")
+            setUserRoute()
+#end
+            break
+    }
+}
+#if($entityName == "SysRoute")
+//设置用户路由
+function setUserRoute(){
+  SysRouteApi.getRoute().then(res => {
+    if(res.errno === 0){
+      store.commit("setUserRoutes", genRoutes(res.data))
+    }
+  })
+}
+#end
+</script>

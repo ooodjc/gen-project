@@ -7,15 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ${entityName}Service {
     @Autowired
     private ${entityName}Mapper ${entityName}Mapper;
 
-    //列表
+    //所有数据
     public List<${entityName}> Item(){
         return ${entityName}Mapper.selectByExample(null);
+    }
+
+    //列表
+    public List<${entityName}> Item(Map<String, Object> query){
+            ${entityName}Example example = new ${entityName}Example();
+            ${entityName}Example.Criteria criteria = example.createCriteria();
+        if(query.get("searchValue") != null && !query.get("searchValue").equals("")){
+            //criteria.andGoodsTypeNameLike("%" + query.get("searchValue").toString() + "%");
+        }
+        return ${entityName}Mapper.selectByExample(example);
     }
 
     //按主键查询

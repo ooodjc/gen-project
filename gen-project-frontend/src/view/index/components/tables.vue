@@ -108,7 +108,7 @@ watch(
 
 const tableInit = () => {
   props.modelValue.tables = props.modelValue.tables.map((item) => {
-    return {
+    let data = {
       ...item,
       isMenu: true,
       isDynamicRoute: true,
@@ -121,6 +121,14 @@ const tableInit = () => {
       isPagination: true,
       isIndex: true,
     };
+    data.columns = data.columns.map((item) => {
+      return {
+        ...item,
+        isShow: true,
+        componentType: "input",
+      };
+    });
+    return data;
   });
   data.tableInit = true;
   console.log("表格初始化完成");

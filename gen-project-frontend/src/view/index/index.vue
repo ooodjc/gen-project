@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div class="content" :style="{ height: data.winHeight +'px' }">
     <ConfigForm v-model="data.config" />
     <Tables v-model="data.config" @editChange="edit" />
     <el-dialog title="表格信息" v-model="data.dialogTableVisible">
       <!-- 字段 -->
       <Columns v-model="data.editList" />
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="data.dialogTableVisible = false">取 消</el-button>
-        <el-button type="primary" @click="data.dialogTableVisible = false">确 定</el-button>
-      </span> -->
     </el-dialog>
+    <!-- 生成按钮，屏幕水平居中 -->
+    <div class="text-center margin-top-20">
+      <el-button type="primary" size="medium" @click="push">生成</el-button>
+    </div>
   </div>
 
   <!-- 弹窗表格 -->
@@ -29,6 +29,7 @@ const data = reactive({
   },
   dialogTableVisible: false,  // 弹窗表格
   editList: [],              // 编辑列表
+  winHeight: document.documentElement.clientHeight -150, // 屏幕高度
 })
 
 onMounted( async() => {
@@ -45,4 +46,23 @@ const edit = (row) => {
   data.dialogTableVisible = true
   data.editList = row.columns
 }
+
+const push = () => {
+  console.log(data.config)
+  /* api.generate(data.config).then(res => {
+    console.log(res)
+  }) */
+}
 </script>
+
+<style lang="scss" scoped>
+.content{
+  overflow-y: auto;
+}
+.text-center{
+  text-align: center;
+}
+.margin-top-20{
+  margin-top: 20px;
+}
+</style>

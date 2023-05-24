@@ -24,7 +24,7 @@ const routes = [
                 path: "/mine",
                 name: "Mine",
                 component: () => import('@/view/mine/index.vue'),
-                meta: { title: 'UserInfo', icon: 'Document'}
+                meta: { title: 'UserInfo', icon: 'Document', hidden: true }
             },
 
         ]

@@ -10,14 +10,6 @@
       router
       class="el-menu-vertical"
     >
-      <!-- 首页菜单 -->
-      <el-menu-item :index="indexRoute.name">
-        <el-icon>
-          <component :is="indexRoute.meta.icon"></component>
-        </el-icon>
-        <template #title>{{ indexRoute.meta.title }}</template>
-      </el-menu-item>
-
       <SubMenuVue v-for="item in userRoutes" :item="item" :key="item.name" />
     </el-menu>
   </el-scrollbar>
@@ -29,11 +21,10 @@ const route = useRoute()
 const router = useRouter()
 const store = useStore()
 
-const indexRoute = router.options.routes.filter(item => item.name == 'Layout')[0].children.filter(item => item.name == 'index')[0]
 const onRoutes = computed(() => route.name)
 const collapse = computed(() => store.state.isCollapse)
 //用户路由
-const userRoutes = computed(() => store.state.userRoutes)
+const userRoutes = router.options.routes.filter(item => item.name == 'Layout')[0].children
 </script>
 
 <style>

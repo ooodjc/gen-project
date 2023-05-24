@@ -11,7 +11,7 @@
         </el-menu-item-group>
     </el-sub-menu>
 
-    <el-menu-item :index="item.name" v-else>
+    <el-menu-item :index="item.name" v-else-if="!item.meta.hidden">
         <el-icon>
             <component :is="item.meta.icon"></component>
         </el-icon>

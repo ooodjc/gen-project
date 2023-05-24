@@ -8,7 +8,7 @@
         >
             <el-form :model="data.editData" :rules="data.rules" ref="editForm" label-width="100px">
                 <el-row :gutter="10">
-#foreach($item in $columns)
+#foreach($item in $data.table.columns)
 #if($item.javaName != "id")
                     <el-col :span="20">
                         <el-form-item label="${item.comment}" prop="${item.javaName}">
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import ${entityName}Api from '@/utils/api/${entityName}Api.js'
+import ${data.table.entityName}Api from '@/utils/api/${data.table.entityName}Api.js'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({
@@ -52,7 +52,7 @@ const data = reactive({
     isEditDialog: true,
     editData: {},
     rules: {
-#foreach($item in $columns)
+#foreach($item in $data.table.columns)
 #if($item.javaName != "id")
         ${item.javaName}: [
             { required: true, message: '${item.comment}不能为空', trigger: 'blur' },
@@ -80,7 +80,7 @@ const edit = async (formEl) => {
             //校验通过
             let editData = JSON.parse(JSON.stringify(data.editData))
 
-            ${entityName}Api.update(editData).then((res) => {
+            ${data.table.entityName}Api.update(editData).then((res) => {
                 if (res.errno === 0) {
                     ElMessage.success('修改成功')
                     data.isAddDialog = false

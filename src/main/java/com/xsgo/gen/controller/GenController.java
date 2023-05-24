@@ -36,10 +36,13 @@ public class GenController {
 
     @RequestMapping("/download")
     public void download(HttpServletResponse response,@RequestBody GenContext c) throws IOException {
-        String databaseName = c.getDatabaseName();
-        String parentPackage = c.getParentPackage();
-        List<String> tables = c.getTables();
         byte[] data = VelocityUtils.downloadCode(c);
+        ResZip(response, data);
+    }
+
+    @RequestMapping("/downloadV2")
+    public void downloadV2(HttpServletResponse response,@RequestBody Map<String,Object> map) throws IOException {
+        byte[] data = VelocityUtils.downloadCode(map);
         ResZip(response, data);
     }
 

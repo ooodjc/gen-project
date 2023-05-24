@@ -18,7 +18,7 @@
         >
             <!-- 多选框 -->
             <el-table-column type="selection" width="55" fixed="left"></el-table-column>
-#foreach($item in $columns)
+#foreach($item in $data.table.columns)
 #if($item.javaName != "id")
             <el-table-column prop="${item.javaName}" label="${item.comment}" width="120px" />
 #end
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import ${entityName}Api from '@/utils/api/${entityName}Api.js'
+import ${data.table.entityName}Api from '@/utils/api/${data.table.entityName}Api.js'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({
@@ -97,7 +97,7 @@ const showEditDialog = (row) => {
 
 const deleteItem = (row) => {
     let editData = JSON.parse(JSON.stringify(row))
-    ${entityName}Api.delete(editData).then(res => {
+    ${data.table.entityName}Api.delete(editData).then(res => {
         if (res.errno === 0) {
             ElMessage.success('删除成功')
             emit('page-change', props.page)
@@ -116,7 +116,7 @@ const deletes = () => {
         ElMessage.error('请选择要删除的商品')
         return
     }
-    ${entityName}Api.deletes(data.selectedList).then(res => {
+    ${data.table.entityName}Api.deletes(data.selectedList).then(res => {
         if (res.errno === 0) {
             ElMessage.success('删除成功')
             emit('page-change', props.page)

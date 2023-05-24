@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import ${entityName}Api from '@/utils/api/${entityName}Api.js'
+import ${data.table.entityName}Api from '@/utils/api/${data.table.entityName}Api.js'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({
@@ -48,7 +48,7 @@ const data = reactive({
     addData: {
     },
     rules: {
-#foreach($item in $columns)
+#foreach($item in $data.table.columns)
 #if($item.javaName != "id")
         ${item.javaName}: [
             { required: true, message: '${item.comment}不能为空', trigger: 'blur' },
@@ -76,7 +76,7 @@ const add = async (formEl) => {
             //校验通过
             let addData = JSON.parse(JSON.stringify(data.addData))
 
-            ${entityName}Api.add(addData).then((res) => {
+            ${data.table.entityName}Api.add(addData).then((res) => {
                 if (res.errno === 0) {
                     ElMessage.success('添加成功')
                     data.isAddDialog = false

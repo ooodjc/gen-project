@@ -17,6 +17,9 @@ const api = {
     /* 下载代码 */
     download(data = {}){
         return download.zip('download',data)
+    },
+    downloadV2(data = {}){
+        return download.zip('downloadV2',data)
     }
 }
 

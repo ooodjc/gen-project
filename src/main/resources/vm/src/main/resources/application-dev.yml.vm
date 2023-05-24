@@ -19,4 +19,4 @@ spring:
 
 logging:
   level:
-      ${parentPackage}.mapper: debug
+      ${data.groupId}.mapper: debug

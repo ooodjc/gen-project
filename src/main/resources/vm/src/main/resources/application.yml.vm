@@ -13,4 +13,4 @@ spring:
 # MyBatis配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: ${parentPackage}.entity
+  type-aliases-package: ${data.groupId}.entity

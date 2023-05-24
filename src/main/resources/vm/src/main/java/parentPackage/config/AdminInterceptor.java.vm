@@ -1,7 +1,7 @@
-package ${parentPackage}.config;
+package ${data.groupId}.config;
 
 import com.alibaba.fastjson.JSONObject;
-import ${parentPackage}.utils.AdminTokenUtil;
+import ${data.groupId}.utils.AdminTokenUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 

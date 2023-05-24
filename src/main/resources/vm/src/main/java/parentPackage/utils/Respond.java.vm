@@ -1,4 +1,4 @@
-package ${parentPackage}.utils;
+package ${data.groupId}.utils;
 
 public class Respond<T> {
     private int errno = 0;

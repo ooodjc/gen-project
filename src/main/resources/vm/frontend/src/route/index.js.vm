@@ -26,7 +26,7 @@ const routes = [
                 component: () => import('@/view/mine/index.vue'),
                 meta: { title: 'UserInfo', icon: 'Document'}
             },
-#*#foreach($item in $tables)
+#*#foreach($item in $data.tables)
             {
                 path: "/${item.entityName}",
                 name: "${item.entityName}",

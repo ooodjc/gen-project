@@ -2,37 +2,37 @@ import http from "@/utils/request"
 export default {
     //全部列表
     all(data = {}){
-        return http.get('${entityName}/All',data)
+        return http.get('${data.table.entityName}/All',data)
     },
     //列表
     item(data = {}){
-        return http.post('${entityName}/Item',data)
+        return http.post('${data.table.entityName}/Item',data)
     },
     //模糊搜索
     search(data = {}){
-        return http.get('${entityName}/Search',data)
+        return http.get('${data.table.entityName}/Search',data)
     },
     //按id查询
     selectId(data = {}){
-        return http.get('${entityName}/SelectId',data)
+        return http.get('${data.table.entityName}/SelectId',data)
     },
     //新增信息
     add(data = {}){
-        return http.post('${entityName}/Add',data)
+        return http.post('${data.table.entityName}/Add',data)
     },
     //更新信息
     update(data = {}){
-        return http.post('${entityName}/Update',data)
+        return http.post('${data.table.entityName}/Update',data)
     },
     //删除
     delete(data = {}){
-        return http.post('${entityName}/Delete',data)
+        return http.post('${data.table.entityName}/Delete',data)
     },
     //批量删除
     deletes(data = {}){
-        return http.post('${entityName}/Deletes',data)
+        return http.post('${data.table.entityName}/Deletes',data)
     },
-#if($entityName == 'SysUser')
+#if($data.table.entityName == 'SysUser')
     login(data = {}){
         return http.post('SysUser/Login',data)
     },
@@ -44,7 +44,7 @@ export default {
         return http.post('SysUser/ChangePassword',data)
     },
 #end
-#if($entityName == 'SysRoute')
+#if($data.table.entityName == 'SysRoute')
     //按权限获取路由
     getRoute(data = {}){
         return http.get('SysRoute/GetRoute',data)

@@ -120,6 +120,7 @@ const tableInit = () => {
       isSearch: true,
       isPagination: true,
       isIndex: true,
+      entityName: toHump(item.name),
     };
     data.columns = data.columns.map((item) => {
       return {
@@ -137,5 +138,14 @@ const tableInit = () => {
 //编辑
 const edit = (row) => {
   emit("editChange", row);
+};
+
+//将下划线命名转为大驼峰命名,如：user_name => UserName
+const toHump = (name) => {
+  //将首字母转为大写
+  name = name.substring(0, 1).toUpperCase() + name.substring(1);
+  return name.replace(/\_(\w)/g, function (all, letter) {
+    return letter.toUpperCase();
+  });
 };
 </script>

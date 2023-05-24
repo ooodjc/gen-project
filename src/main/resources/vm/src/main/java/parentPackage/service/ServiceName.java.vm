@@ -1,8 +1,8 @@
-package ${parentPackage}.service;
+package ${data.groupId}.service;
 
-import ${parentPackage}.entity.${entityName};
-import ${parentPackage}.entity.${entityName}Example;
-import ${parentPackage}.mapper.${entityName}Mapper;
+import ${data.groupId}.entity.${data.table.entityName};
+import ${data.groupId}.entity.${data.table.entityName}Example;
+import ${data.groupId}.mapper.${data.table.entityName}Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,40 +10,40 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ${entityName}Service {
+public class ${data.table.entityName}Service {
     @Autowired
-    private ${entityName}Mapper ${entityName}Mapper;
+    private ${data.table.entityName}Mapper ${data.table.entityName}Mapper;
 
     //所有数据
-    public List<${entityName}> Item(){
-        return ${entityName}Mapper.selectByExample(null);
+    public List<${data.table.entityName}> Item(){
+        return ${data.table.entityName}Mapper.selectByExample(null);
     }
 
     //列表
-    public List<${entityName}> Item(Map<String, Object> query){
-            ${entityName}Example example = new ${entityName}Example();
-            ${entityName}Example.Criteria criteria = example.createCriteria();
+    public List<${data.table.entityName}> Item(Map<String, Object> query){
+            ${data.table.entityName}Example example = new ${data.table.entityName}Example();
+            ${data.table.entityName}Example.Criteria criteria = example.createCriteria();
         if(query.get("searchValue") != null && !query.get("searchValue").equals("")){
             //criteria.andGoodsTypeNameLike("%" + query.get("searchValue").toString() + "%");
         }
-        return ${entityName}Mapper.selectByExample(example);
+        return ${data.table.entityName}Mapper.selectByExample(example);
     }
 
     //按主键查询
-    public ${entityName} SelectId(int id){
-        return ${entityName}Mapper.selectByPrimaryKey(id);
+    public ${data.table.entityName} SelectId(int id){
+        return ${data.table.entityName}Mapper.selectByPrimaryKey(id);
     }
 
     //模糊搜索
-    public List<${entityName}> Search(String key){
-        ${entityName}Example example = new ${entityName}Example();
-        return ${entityName}Mapper.selectByExample(example);
+    public List<${data.table.entityName}> Search(String key){
+        ${data.table.entityName}Example example = new ${data.table.entityName}Example();
+        return ${data.table.entityName}Mapper.selectByExample(example);
     }
 
 
     //新增
-    public boolean Add(${entityName} info){
-        if (${entityName}Mapper.insert(info) > 0){
+    public boolean Add(${data.table.entityName} info){
+        if (${data.table.entityName}Mapper.insert(info) > 0){
             return true;
         }
         return false;
@@ -51,49 +51,49 @@ public class ${entityName}Service {
 
     //删除
     public boolean Delete(int id){
-        ${entityName}Example example = new ${entityName}Example();
+        ${data.table.entityName}Example example = new ${data.table.entityName}Example();
         example.createCriteria().andIdEqualTo(id);
-        if (${entityName}Mapper.deleteByExample(example) > 0){
+        if (${data.table.entityName}Mapper.deleteByExample(example) > 0){
             return true;
         }
         return false;
     }
 
     //批量删除
-    public boolean Delete(${entityName}[] infos){
-        ${entityName}Example example = new ${entityName}Example();
-        for (${entityName} v : infos){
+    public boolean Delete(${data.table.entityName}[] infos){
+        ${data.table.entityName}Example example = new ${data.table.entityName}Example();
+        for (${data.table.entityName} v : infos){
             example.or().andIdEqualTo(v.getId());
         }
-        if (${entityName}Mapper.deleteByExample(example) > 0){
+        if (${data.table.entityName}Mapper.deleteByExample(example) > 0){
             return true;
         }
         return false;
     }
 
     //更新
-    public boolean Update(${entityName} info){
-        ${entityName}Example example = new ${entityName}Example();
+    public boolean Update(${data.table.entityName} info){
+        ${data.table.entityName}Example example = new ${data.table.entityName}Example();
         example.createCriteria().andIdEqualTo(info.getId());
-        if (${entityName}Mapper.updateByExampleSelective(info, example) > 0){
+        if (${data.table.entityName}Mapper.updateByExampleSelective(info, example) > 0){
             return true;
         }
         return false;
     }
 
-#if($entityName == "SysUser")
+#if($data.table.entityName == "SysUser")
     //登录
-    public ${entityName} Login(String username, String password){
-        ${entityName}Example example = new ${entityName}Example();
+    public ${data.table.entityName} Login(String username, String password){
+        ${data.table.entityName}Example example = new ${data.table.entityName}Example();
         example.createCriteria().andUserIdEqualTo(username).andUserPasswordEqualTo(password);
-        List<${entityName}> list = ${entityName}Mapper.selectByExample(example);
+        List<${data.table.entityName}> list = ${data.table.entityName}Mapper.selectByExample(example);
         if (list.size() > 0){
             return list.get(0);
         }
         return null;
     }
 #end
-#if($entityName == "SysRoute")
+#if($data.table.entityName == "SysRoute")
     //按权限查询
     public List<SysRoute> SelectRole(String roleid){
         SysRouteExample example = new SysRouteExample();

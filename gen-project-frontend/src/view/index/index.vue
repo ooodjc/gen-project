@@ -25,7 +25,9 @@ import Tables from './components/tables.vue';
 const data = reactive({
   config: {
     database: 'test',
+    groupId: 'com.xsgo.test',         // 项目包名
     tables: [],
+    title: '测试',                    // 项目名称
   },
   dialogTableVisible: false,  // 弹窗表格
   editList: [],              // 编辑列表
@@ -49,9 +51,9 @@ const edit = (row) => {
 
 const push = () => {
   console.log(data.config)
-  /* api.generate(data.config).then(res => {
+  api.downloadV2(data.config).then(res => {
     console.log(res)
-  }) */
+  })
 }
 </script>
 

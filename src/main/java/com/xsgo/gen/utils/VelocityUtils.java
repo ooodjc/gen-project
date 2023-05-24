@@ -51,6 +51,29 @@ public class VelocityUtils {
         return outputStream.toByteArray();
     }
 
+    public static byte[] downloadCode(Map<String,Object> data) {
+        TableService tableService = new TableService();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ZipOutputStream zip = new ZipOutputStream(outputStream);
+        List<Object> tables = (List<Object>) data.get("tables");
+        for (Object table : tables) {
+            HashMap<String, Object> map = new HashMap<>();
+            //将data赋值给map
+            map.putAll(data);
+            map.put("table",table);
+            VelocityContext context = makeContext(map);
+            generatorTableCode( zip, context);
+        }
+        VelocityContext context = makeContext(data);
+        generatorOtherCode(zip, context);
+        //将静态资源添加到zip
+        staticResourcesToZip(zip);
+        //关闭流
+        IOUtils.closeQuietly(zip);
+        //返回字节数组
+        return outputStream.toByteArray();
+    }
+
     //非文本文件添加到zip
     public static void staticResourcesToZip(ZipOutputStream zip) {
         for(String filePath : GenUtils.getFiles()){
@@ -90,6 +113,54 @@ public class VelocityUtils {
 
     }
 
+    public static void generatorTableCode(ZipOutputStream zip, VelocityContext context) {
+        initVelocity();
+        List<String> templates = GenUtils.getTemplates();
+        Object data = context.get("data");
+        Object table = ((Map<String, Object>) data).get("table");
+        String entityName = ((Map<String, Object>) table).get("entityName").toString();
+        String groupId = ((Map<String,Object>)data).get("groupId").toString();
+        for(String template : templates){
+            StringWriter sw = new StringWriter();
+            Template tpl = Velocity.getTemplate(template, "UTF-8");
+            tpl.merge(context, sw);
+            try {
+                // 添加到zip
+                zip.putNextEntry(new ZipEntry(GenUtils.getFileName(template, groupId, entityName)));
+                IOUtils.write(sw.toString(), zip, "UTF-8");
+                IOUtils.closeQuietly(sw);
+                zip.flush();
+                zip.closeEntry();
+            } catch (IOException e) {
+                log.error("渲染模板失败：{0}", e);
+            }
+        }
+
+    }
+    public static void generatorOtherCode(ZipOutputStream zip, VelocityContext context) {
+        initVelocity();
+        List<String> templates = GenUtils.getOtherTemplates();
+        Object data = context.get("data");
+        String entityName = "";
+        String groupId = ((Map<String,Object>)data).get("groupId").toString();
+        for(String template : templates){
+            StringWriter sw = new StringWriter();
+            Template tpl = Velocity.getTemplate(template, "UTF-8");
+            tpl.merge(context, sw);
+            try {
+                // 添加到zip
+                zip.putNextEntry(new ZipEntry(GenUtils.getFileName(template, groupId, entityName)));
+                IOUtils.write(sw.toString(), zip, "UTF-8");
+                IOUtils.closeQuietly(sw);
+                zip.flush();
+                zip.closeEntry();
+            } catch (IOException e) {
+                log.error("渲染模板失败：{0}", e);
+            }
+        }
+
+    }
+
     public static VelocityContext makeContext(GenContext c, String table, List<TableInfo> columns){
         VelocityContext context = new VelocityContext();
         context.put("dbName", c.getDatabaseName());
@@ -105,11 +176,17 @@ public class VelocityUtils {
         String groupId = c.getParentPackage().replace("." + split[split.length -1], "");
         String artifactId = split[split.length -1];
         List<Map<String, String>> tableMaps = GenUtils.tablesToContext(c.getTables());
-        context.put("groupId", groupId);
-        context.put("artifactId", artifactId);
+        context.put("groupId", groupId); // 项目组织
+        context.put("artifactId", artifactId);  // 项目名称
         context.put("databaseName", c.getDatabaseName());
         context.put("parentPackage", c.getParentPackage());
         context.put("tables", tableMaps);
+        return context;
+    }
+
+    public static VelocityContext makeContext(Map<String,Object> data){
+        VelocityContext context = new VelocityContext();
+        context.put("data", data);
         return context;
     }
 

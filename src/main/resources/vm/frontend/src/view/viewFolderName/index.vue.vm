@@ -27,12 +27,12 @@
     />
 </template>
 
-<script setup name="${entityName}">
+<script setup name="${data.table.data.table.entityName}">
 import SearchTemp from './components/SearchTemp.vue';
 import TableTemp from './components/TableTemp.vue';
 import AddDialog from './components/AddDialog.vue';
 import EditDialog from './components/EditDialog.vue';
-import ${entityName}Api from '@/utils/api/${entityName}Api.js'
+import ${data.table.entityName}Api from '@/utils/api/${data.table.entityName}Api.js'
 
 const data = reactive({
     searchData: {},             //查询数据
@@ -53,7 +53,7 @@ onMounted(() => {
 // 获取列表
 const getDataList = () => {
     data.loading = true;
-    ${entityName}Api.item({page: data.page, limit: data.limit, query: data.searchData}).then(res => {
+    ${data.table.entityName}Api.item({page: data.page, limit: data.limit, query: data.searchData}).then(res => {
         if(res.errno === 0){
             data.dataList = res.data.list
             data.total = res.data.total

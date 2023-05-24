@@ -1,15 +1,15 @@
-package ${parentPackage}.controller;
+package ${data.groupId}.controller;
 
-import ${parentPackage}.entity.${entityName};
-import ${parentPackage}.service.${entityName}Service;
-#if($entityName == "SysUser")
-import ${parentPackage}.utils.AdminTokenUtil;
-import ${parentPackage}.utils.AdminTokenUtil;
+import ${data.groupId}.entity.${data.table.entityName};
+import ${data.groupId}.service.${data.table.entityName}Service;
+#if($data.table.entityName == "SysUser")
+import ${data.groupId}.utils.AdminTokenUtil;
+import ${data.groupId}.utils.AdminTokenUtil;
 #end
-#if($entityName == "SysRoute")
+#if($data.table.entityName == "SysRoute")
 import javax.servlet.http.HttpServletRequest;
 #end
-import ${parentPackage}.utils.Respond;
+import ${data.groupId}.utils.Respond;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +23,17 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin/${entityName}")
-public class ${entityName}Controller {
+@RequestMapping("/admin/${data.table.entityName}")
+public class ${data.table.entityName}Controller {
     @Autowired
-    private ${entityName}Service ${entityName}Service;
+    private ${data.table.entityName}Service ${data.table.entityName}Service;
 
     //所有数据
     @RequestMapping("All")
     public Respond All(){
         Respond res = new Respond();
         //获取数据
-        List<${entityName}> list = ${entityName}Service.Item();
+        List<${data.table.entityName}> list = ${data.table.entityName}Service.Item();
         //返回数据到前端
         return res.ok(list);
     }
@@ -43,7 +43,7 @@ public class ${entityName}Controller {
     public Respond Search(String key){
         Respond res = new Respond();
         //获取数据
-        List<${entityName}> list = ${entityName}Service.Search(key);
+        List<${data.table.entityName}> list = ${data.table.entityName}Service.Search(key);
         return res.ok(list);
     }
 
@@ -56,19 +56,19 @@ public class ${entityName}Controller {
         //Object to Map,params.get("query") is a Map
         Map<String, Object> query = (Map<String, Object>) params.get("query");
         //获取数据
-        List<${entityName}> list = ${entityName}Service.Item(query);
+        List<${data.table.entityName}> list = ${data.table.entityName}Service.Item(query);
         //组装分页数据
-        PageInfo<${entityName}> data = new PageInfo<>(list);
+        PageInfo<${data.table.entityName}> data = new PageInfo<>(list);
         //返回数据到前端
         return res.ok(data);
     }
 
     //新增
     @RequestMapping("Add")
-    public Respond Add(@RequestBody ${entityName} info){
+    public Respond Add(@RequestBody ${data.table.entityName} info){
         Respond res = new Respond();
         info.setId(0);
-        boolean add = ${entityName}Service.Add(info);
+        boolean add = ${data.table.entityName}Service.Add(info);
         if (!add){
             return res.fail("名称已存在");
         }
@@ -77,36 +77,36 @@ public class ${entityName}Controller {
 
     //删除
     @RequestMapping("Delete")
-    public Respond Delete(@RequestBody ${entityName} info){
+    public Respond Delete(@RequestBody ${data.table.entityName} info){
         Respond res = new Respond();
-        boolean delete = ${entityName}Service.Delete(info.getId());
+        boolean delete = ${data.table.entityName}Service.Delete(info.getId());
         return res.ok(delete);
     }
 
     //批量删除
     @RequestMapping("Deletes")
-    public Respond Deletes(@RequestBody ${entityName}[] infos){
+    public Respond Deletes(@RequestBody ${data.table.entityName}[] infos){
         Respond res = new Respond();
-        boolean delete = ${entityName}Service.Delete(infos);
+        boolean delete = ${data.table.entityName}Service.Delete(infos);
         return res.ok(delete);
     }
 
     //更新
     @RequestMapping("Update")
-    public Respond Update(@RequestBody ${entityName} info){
+    public Respond Update(@RequestBody ${data.table.entityName} info){
         Respond res = new Respond();
-        boolean update = ${entityName}Service.Update(info);
+        boolean update = ${data.table.entityName}Service.Update(info);
         return res.ok(update);
     }
 
-#if($entityName == "SysUser")
+#if($data.table.entityName == "SysUser")
     //登录
     @RequestMapping("Login")
     public Respond Login(@RequestBody Map<String,String> req){
         Respond res = new Respond();
         String userId = req.get("userId");
         String userPwd = req.get("userPwd");
-        ${entityName} userInfo = ${entityName}Service.Login(userId,userPwd);
+        ${data.table.entityName} userInfo = ${data.table.entityName}Service.Login(userId,userPwd);
         if (userInfo == null){
             return res.fail("账号或密码错误");
         }
@@ -129,7 +129,7 @@ public class ${entityName}Controller {
         int id = (int)req.get("id");
         String oldPwd = req.get("oldPwd").toString();
         String newPwd = req.get("newPwd").toString();
-        ${entityName} userInfo = ${entityName}Service.SelectId(id);
+        ${data.table.entityName} userInfo = ${data.table.entityName}Service.SelectId(id);
         if (userInfo == null) {
             return res.fail("用户id不存在");
         }
@@ -137,24 +137,24 @@ public class ${entityName}Controller {
             return res.fail("原密码错误");
         }
         userInfo.setUserPassword(newPwd);
-        boolean update = ${entityName}Service.Update(userInfo);
+        boolean update = ${data.table.entityName}Service.Update(userInfo);
         return res.ok(update);
     }
 
     //新增
     @RequestMapping("Register")
-    public Respond Register(@RequestBody ${entityName} info){
+    public Respond Register(@RequestBody ${data.table.entityName} info){
         Respond res = new Respond();
         info.setId(0);
         info.setUserRole("user");
-        boolean add = ${entityName}Service.Add(info);
+        boolean add = ${data.table.entityName}Service.Add(info);
         if (!add){
             return res.fail("名称已存在");
         }
         return res.ok(add);
     }
 #end
-#if($entityName == "SysRoute")
+#if($data.table.entityName == "SysRoute")
     //按权限获取路由
     @RequestMapping("GetRoute")
     public Respond GetRoute(HttpServletRequest request){

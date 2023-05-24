@@ -32,7 +32,7 @@ const data = reactive({
   tables: [],                 // 表格列表
   dialogTableVisible: false,  // 弹窗表格
   editList: [],              // 编辑列表
-  winHeight: document.documentElement.clientHeight -150, // 屏幕高度
+  winHeight: document.documentElement.clientHeight -140, // 屏幕高度
 })
 
 onMounted( async() => {

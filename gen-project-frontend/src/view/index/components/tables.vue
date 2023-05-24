@@ -1,7 +1,8 @@
 <template>
-    <el-table :data="modelValue.tables" @selection-change="handleSelectionChange" style="width: 100%">
+    <el-table :height="data.tableHeight" :data="modelValue.tables" @selection-change="handleSelectionChange" style="width: 100%">
       <!-- 多选 -->
       <el-table-column type="selection" width="55" />
+      <el-table-column type="index" width="50" />
       <el-table-column prop="name" label="表名" width="120" />
       <!-- 页面名称 -->
       <el-table-column prop="pageName" label="页面名称" width="200">
@@ -97,6 +98,7 @@ const emit = defineEmits(["update:modelValue", "editChange", "selectionChange"])
 const data = reactive({
   //表格初始化状态
   tableInit: false,
+  tableHeight: document.documentElement.clientHeight -300, // 屏幕高度
 });
 
 //监听modelValue变化并触发update:modelValue事件

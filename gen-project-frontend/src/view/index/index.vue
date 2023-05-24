@@ -1,7 +1,7 @@
 <template>
   <div class="content" :style="{ height: data.winHeight +'px' }">
     <ConfigForm v-model="data.config" />
-    <Tables v-model="data.config" @editChange="edit" />
+    <Tables v-model="data" @editChange="edit" @selectionChange="selectionChange" />
     <el-dialog title="表格信息" v-model="data.dialogTableVisible">
       <!-- 字段 -->
       <Columns v-model="data.editList" />
@@ -26,9 +26,10 @@ const data = reactive({
   config: {
     database: 'test',
     groupId: 'com.xsgo.test',         // 项目包名
-    tables: [],
+    tables: [],                      // 已选中表格列表
     title: '测试',                    // 项目名称
   },
+  tables: [],                 // 表格列表
   dialogTableVisible: false,  // 弹窗表格
   editList: [],              // 编辑列表
   winHeight: document.documentElement.clientHeight -150, // 屏幕高度
@@ -38,7 +39,7 @@ onMounted( async() => {
   api.allTableInfo().then(res => {
     console.log(res)
     data.config.database = res.data.databaseName
-    data.config.tables = res.data.tableInfos
+    data.tables = res.data.tableInfos
   })
 })
 
@@ -54,6 +55,10 @@ const push = () => {
   api.downloadV2(data.config).then(res => {
     console.log(res)
   })
+}
+
+const selectionChange = (val) => {
+  data.config.tables = val
 }
 </script>
 

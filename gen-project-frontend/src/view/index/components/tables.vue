@@ -1,5 +1,7 @@
 <template>
-    <el-table :data="modelValue.tables" style="width: 100%">
+    <el-table :data="modelValue.tables" @selection-change="handleSelectionChange" style="width: 100%">
+      <!-- 多选 -->
+      <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="表名" width="120" />
       <!-- 页面名称 -->
       <el-table-column prop="pageName" label="页面名称" width="200">
@@ -90,7 +92,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["update:modelValue", "editChange"]);
+const emit = defineEmits(["update:modelValue", "editChange", "selectionChange"]);
 
 const data = reactive({
   //表格初始化状态
@@ -147,5 +149,9 @@ const toHump = (name) => {
   return name.replace(/\_(\w)/g, function (all, letter) {
     return letter.toUpperCase();
   });
+};
+
+const handleSelectionChange = (val) => {
+  emit("selectionChange", val);
 };
 </script>

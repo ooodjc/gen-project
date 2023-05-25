@@ -1,12 +1,16 @@
 <template>
-    <el-form :model="modelValue" label-width="100">
+    <el-form inline :model="modelValue" label-width="100">
       <el-form-item label="数据库名称">
         <el-input v-model="modelValue.database" disabled></el-input>
       </el-form-item>
       <!-- 标题 -->
-        <el-form-item label="标题">
-            <el-input v-model="modelValue.title"></el-input>
-        </el-form-item>
+      <el-form-item label="标题">
+          <el-input v-model="modelValue.title"></el-input>
+      </el-form-item>
+      <!-- 是否动态路由 -->
+      <el-form-item label="动态路由">
+        <el-switch v-model="modelValue.dynamicRouter"></el-switch>
+      </el-form-item>
     </el-form>
 </template>
 

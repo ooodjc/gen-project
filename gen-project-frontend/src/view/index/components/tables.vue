@@ -11,27 +11,21 @@
         </template>
       </el-table-column>
       <!-- 是否显示侧边菜单 -->
-      <el-table-column prop="isMenu" label="菜单显示">
+      <el-table-column prop="isHidden" label="侧边隐藏">
         <template #default="{ row }">
-          <el-switch v-model="row.isMenu"></el-switch>
+          <el-switch v-model="row.isHidden"></el-switch>
         </template>
       </el-table-column>
-      <!-- 是否动态路由 -->
-      <el-table-column prop="isDynamicRoute" label="动态路由">
+      <!-- 是否显示序号 -->
+      <el-table-column prop="isIndex" label="序号">
         <template #default="{ row }">
-          <el-switch v-model="row.isDynamicRoute"></el-switch>
+          <el-switch v-model="row.isIndex"></el-switch>
         </template>
       </el-table-column>
-      <!-- 是否生成页面 -->
-      <el-table-column prop="isView" label="生成页面">
+      <!-- 是否多选 -->
+      <el-table-column prop="isSelection" label="多选">
         <template #default="{ row }">
-          <el-switch v-model="row.isView"></el-switch>
-        </template>
-      </el-table-column>
-      <!-- 是否生成接口 -->
-      <el-table-column prop="isApi" label="生成接口">
-        <template #default="{ row }">
-          <el-switch v-model="row.isApi"></el-switch>
+          <el-switch v-model="row.isSelection"></el-switch>
         </template>
       </el-table-column>
       <!-- 是否显示编辑按钮 -->
@@ -56,18 +50,6 @@
       <el-table-column prop="isSearch" label="搜索">
         <template #default="{ row }">
           <el-switch v-model="row.isSearch"></el-switch>
-        </template>
-      </el-table-column>
-      <!-- 是否显示分页 -->
-      <el-table-column prop="isPagination" label="分页">
-        <template #default="{ row }">
-          <el-switch v-model="row.isPagination"></el-switch>
-        </template>
-      </el-table-column>
-      <!-- 是否显示序号 -->
-      <el-table-column prop="isIndex" label="序号">
-        <template #default="{ row }">
-          <el-switch v-model="row.isIndex"></el-switch>
         </template>
       </el-table-column>
       <!-- 操作，编辑、删除按钮，浮动显示 -->
@@ -114,7 +96,7 @@ const tableInit = () => {
   props.modelValue.tables = props.modelValue.tables.map((item) => {
     let data = {
       ...item,
-      isMenu: true,
+      isHidden: false,
       isDynamicRoute: true,
       isView: true,
       isApi: true,
@@ -122,8 +104,8 @@ const tableInit = () => {
       isDelete: true,
       isAdd: true,
       isSearch: true,
-      isPagination: true,
       isIndex: true,
+      isSelection: true,
       entityName: toHump(item.name),
     };
     data.columns = data.columns.map((item) => {

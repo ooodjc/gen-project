@@ -28,6 +28,7 @@ const data = reactive({
     groupId: 'com.xsgo.test',         // 项目包名
     tables: [],                      // 已选中表格列表
     title: '测试',                    // 项目名称
+    dynamicRouter: false,            // 是否动态路由
   },
   tables: [],                 // 表格列表
   dialogTableVisible: false,  // 弹窗表格

@@ -33,7 +33,9 @@
 <script setup name="login">
 import { ref, reactive,onMounted} from 'vue'
 import SysUserApi from '@/utils/api/SysUserApi'
+#if($data.dynamicRouter)
 import SysRouteApi from '@/utils/api/SysRouteApi'
+#end
 import { ElMessage,ElMessageBox } from 'element-plus'
 import router from '@/route'
 import { storage } from '@/utils/storage'
@@ -87,7 +89,9 @@ function onLogin(formEl){
           //本地储存token
           storage.set("token",res.data.token)
           store.commit("setUserInfo",res.data.userInfo)
+#if($data.dynamicRouter)
           setUserRoute()
+#end
           ElMessage('登录成功')
           router.push('/index')
         }else{
@@ -130,6 +134,7 @@ function onRegister(formEl){
   })
 }
 
+#if($data.dynamicRouter)
 //设置用户路由
 function setUserRoute(){
   SysRouteApi.getRoute().then(res => {
@@ -139,6 +144,7 @@ function setUserRoute(){
     }
   })
 }
+#end
 </script>
 
 <style scoped>

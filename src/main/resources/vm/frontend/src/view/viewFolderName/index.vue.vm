@@ -1,8 +1,10 @@
 <template>
-    <SearchTemp 
+#if($data.table.isSearch)
+    <SearchTemp
         v-model="data.searchData"
         @change="search"
     />
+#end
 
     <TableTemp 
         :dataList="data.dataList"

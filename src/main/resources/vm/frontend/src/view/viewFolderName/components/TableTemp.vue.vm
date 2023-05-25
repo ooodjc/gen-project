@@ -1,12 +1,18 @@
 <template>
     <div class="content">
+#if($data.table.isAdd || $data.table.isSelection)
         <el-form inline label-width="70px"  class="demo-form-inline">
             <!-- 新增、删除、批量删除按钮 -->
             <el-form-item>
+    #if($data.table.isAdd)
                 <el-button type="primary" @click="showAddDialog">新增</el-button>
+    #end
+    #if($data.table.isSelection)
                 <el-button type="danger" @click="deletes">批量删除</el-button>
+    #end
             </el-form-item>
         </el-form>
+#end
 
         <el-table 
         v-loading="loading" 
@@ -14,28 +20,41 @@
         border
         :height="data.winHeight - 400"
         style="margin-top: 20px;"
+#if($data.table.isSelection)
         @selection-change="handleSelectionChange"
+#end
         >
+#if($data.table.isSelection)
             <!-- 多选框 -->
             <el-table-column type="selection" width="55" fixed="left"></el-table-column>
+#end
+#if($data.table.isIndex)
+            <el-table-column type="index" width="50" />
+#end
 #foreach($item in $data.table.columns)
-#if($item.javaName != "id")
+    #if($item.javaName != "id")
             <el-table-column prop="${item.javaName}" label="${item.comment}" width="120px" />
+    #end
 #end
-#end
+#if($data.table.isEdit || $data.table.isDelete)
             <el-table-column label="操作" width="180" fixed="right">
                 <!-- 删除和编辑 -->
                 <template #default="scope">
+    #if($data.table.isDelete)
                     <el-button type="danger" @click="deleteItem(scope.row)">删除</el-button>
+    #end
+    #if($data.table.isEdit)
                     <el-button type="primary" @click="showEditDialog(scope.row)">编辑</el-button>
+    #end
                 </template>
             </el-table-column>
         </el-table>
+#end
         <!-- 分页 -->
         <div class="center2" style="margin-top: 20px;">
-            <el-pagination 
-            layout="pager" 
-            :page-size="limit" 
+            <el-pagination
+            layout="pager"
+            :page-size="limit"
             :total="total"
             :current-page="page"
             @current-change="setPage"
@@ -87,29 +106,37 @@ const setPage = (page) => {
     emit('page-change', page)
 }
 
+#if($data.table.isAdd)
 const showAddDialog = () => {
-    emit('add')
+  emit('add')
 }
+#end
 
+#if($data.table.isEdit)
 const showEditDialog = (row) => {
     emit('edit', row)
 }
+#end
 
+#if($data.table.isDelete)
 const deleteItem = (row) => {
-    let editData = JSON.parse(JSON.stringify(row))
-    ${data.table.entityName}Api.delete(editData).then(res => {
-        if (res.errno === 0) {
-            ElMessage.success('删除成功')
-            emit('page-change', props.page)
-        } else {
-            ElMessage.error(res.data.msg)
-        }
-    })
+  let editData = JSON.parse(JSON.stringify(row))
+        ${data.table.entityName}Api.delete(editData).then(res => {
+    if (res.errno === 0) {
+      ElMessage.success('删除成功')
+      emit('page-change', props.page)
+    } else {
+      ElMessage.error(res.data.msg)
+    }
+  })
 }
+#end
 
+#if($data.table.isSelection)
 const handleSelectionChange = (val) => {
     data.selectedList = val
 }
+#end
 
 const deletes = () => {
     if (data.selectedList.length === 0) {

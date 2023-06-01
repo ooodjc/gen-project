@@ -2,7 +2,7 @@
   <div class="content" :style="{ height: data.winHeight +'px' }">
     <ConfigForm v-model="data.config" />
     <Tables v-model="data" @editChange="edit" @selectionChange="selectionChange" />
-    <el-dialog title="表格信息" v-model="data.dialogTableVisible">
+    <el-dialog title="表格信息" v-model="data.dialogTableVisible" width="80%">
       <!-- 字段 -->
       <Columns v-model="data.editList" />
     </el-dialog>

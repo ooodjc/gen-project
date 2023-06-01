@@ -112,6 +112,9 @@ const tableInit = () => {
       return {
         ...item,
         isShow: true,
+        isAdd: true,
+        isEdit: true,
+        tableType: "",
         componentType: "input",
       };
     });

@@ -8,13 +8,36 @@
       </template>
     </el-table-column>
     <!-- 是否显示 -->
-    <el-table-column prop="isShow" label="是否显示" width="80">
+    <el-table-column prop="isShow" label="表格显示">
       <template #default="{ row }">
         <el-switch v-model="row.isShow"></el-switch>
       </template>
     </el-table-column>
+    <!-- 表格类型 -->
+    <el-table-column prop="tableType" label="表格类型">
+      <template #default="{ row }">
+        <el-select v-model="row.tableType" placeholder="请选择">
+          <el-option label="默认" value=""></el-option>
+          <el-option label="图片" value="image"></el-option>
+          <el-option label="日期" value="date"></el-option>
+          <el-option label="日期时间" value="datetime"></el-option>
+        </el-select>
+      </template>
+    </el-table-column>
+    <!-- 添加表单中显示 -->
+    <el-table-column prop="isAdd" label="可添加">
+      <template #default="{ row }">
+        <el-switch v-model="row.isAdd"></el-switch>
+      </template>
+    </el-table-column>
+    <!-- 可编辑 -->
+    <el-table-column prop="isEdit" label="可编辑">
+      <template #default="{ row }">
+        <el-switch v-model="row.isEdit"></el-switch>
+      </template>
+    </el-table-column>
     <!-- 组件类型 -->
-    <el-table-column prop="componentType" label="组件类型">
+    <el-table-column prop="componentType" label="表单类型">
       <template #default="{ row }">
         <el-select v-model="row.componentType" placeholder="请选择">
           <el-option label="默认" value=""></el-option>

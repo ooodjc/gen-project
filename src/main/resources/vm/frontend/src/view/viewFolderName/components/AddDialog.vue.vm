@@ -8,11 +8,55 @@
         >
             <el-form :model="data.addData" :rules="data.rules" ref="addForm" label-width="100px">
                 <el-row :gutter="10">
-#foreach($item in $columns)
-#if($item.javaName != "id")
+#foreach($item in $data.table.columns)
+#if($item.javaName != "id" && $item.isAdd)
                     <el-col :span="20">
                         <el-form-item label="${item.comment}" prop="${item.javaName}">
+#if($item.componentType == "select" && $item.isAdd)
+                            <el-select v-model="data.addData.${item.javaName}" placeholder="请选择">
+                                <el-option
+                                    v-for="item in data.${item.javaName}Options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                />
+                            </el-select>
+#elseif($item.componentType == "radio" && $item.isAdd)
+                            <el-radio-group v-model="data.addData.${item.javaName}">
+                                <el-radio :label="true">是</el-radio>
+                                <el-radio :label="false">否</el-radio>
+                            </el-radio-group>
+#elseif($item.componentType == "switch" && $item.isAdd)
+                            <el-switch v-model="data.addData.${item.javaName}" :active-value="true" :inactive-value="false" />
+#elseif($item.componentType == "date" && $item.isAdd)
+                            <el-date-picker
+                                v-model="data.addData.${item.javaName}"
+                                type="date"
+                                placeholder="选择日期"
+                                value-format="yyyy-MM-dd"
+                            />
+#elseif($item.componentType == "datetime" && $item.isAdd)
+                            <el-date-picker
+                                v-model="data.addData.${item.javaName}"
+                                type="datetime"
+                                placeholder="选择日期时间"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                            />
+#elseif($item.componentType == "image" && $item.isAdd)
+                            <el-upload
+                                class="avatar-uploader"
+                                :action="data.baseURL+'file/upload'"
+                                :headers="data.headers"
+                                :show-file-list="false"
+                                :on-success="${item.javaName}UploadSuccess"
+                                :before-upload="${item.javaName}UploadBefore"
+                            >
+                                <img v-if="data.addData.${item.javaName}" :src="data.addData.${item.javaName}" class="avatar" style="width: 80px; height: 80px;" />
+                                <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+                            </el-upload>
+#else
                             <el-input v-model="data.addData.${item.javaName}" />
+#end
                         </el-form-item>
                     </el-col>
 #end
@@ -32,6 +76,7 @@
 <script setup>
 import ${data.table.entityName}Api from '@/utils/api/${data.table.entityName}Api.js'
 import { ElMessage } from 'element-plus'
+import { storage } from '@/utils/storage'
 
 const props = defineProps({
     modelValue: {
@@ -56,6 +101,15 @@ const data = reactive({
 #end
 #end
     },
+#foreach($item in $data.table.columns)
+#if($item.componentType == "select" && $item.isAdd)
+    ${item.javaName}Options: [],
+#end
+#end
+    baseURL: import.meta.env.VITE_APP_BASE_API,
+    headers: {
+        'X-Token': storage.get('token')
+    }
 })
 
 onMounted(() => {
@@ -89,6 +143,40 @@ const add = async (formEl) => {
         }
     })
 }
+
+#foreach($item in $data.table.columns)
+#if($item.componentType == "select" && $item.isAdd)
+const get${item.javaName}Options = () => {
+    ${data.table.entityName}Api.get${item.javaName}Options().then((res) => {
+        if (res.errno === 0) {
+            data.${item.javaName}Options = res.data
+        }
+    })
+}
+#elseif($item.componentType == "image" && $item.isAdd)
+//${item.comment}上传成功
+const ${item.javaName}UploadSuccess = (res) => {
+    if (res.errno === 0) {
+        data.addData.${item.javaName} = res.data
+    }
+}
+
+//${item.comment}上传前校验
+const ${item.javaName}UploadBefore = (file) => {
+    const isJPG = file.type === 'image/jpeg'
+    const isPNG = file.type === 'image/png'
+    const isLt2M = file.size / 1024 / 1024 < 2
+
+    if (!isJPG && !isPNG) {
+        ElMessage.error('上传头像图片只能是 JPG/PNG 格式!')
+    }
+    if (!isLt2M) {
+        ElMessage.error('上传头像图片大小不能超过 2MB!')
+    }
+    return (isJPG || isPNG) && isLt2M
+}
+#end
+#end
 </script>
 
 <style scoped lang="scss">

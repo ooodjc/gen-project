@@ -9,10 +9,54 @@
             <el-form :model="data.editData" :rules="data.rules" ref="editForm" label-width="100px">
                 <el-row :gutter="10">
 #foreach($item in $data.table.columns)
-#if($item.javaName != "id")
+#if($item.javaName != "id" && $item.isEdit)
                     <el-col :span="20">
                         <el-form-item label="${item.comment}" prop="${item.javaName}">
-                            <el-input v-model="data.editData.${item.javaName}" />
+#if($item.componentType == "select" && $item.isEdit)
+                            <el-select v-model="data.editData.${item.javaName}" placeholder="请选择${item.comment}">
+                                <el-option
+                                    v-for="item in ${item.javaName}Options"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value"
+                                ></el-option>
+                            </el-select>
+#elseif($item.componentType == "radio" && !$item.isEdit)
+                            <el-radio-group v-model="data.editData.${item.javaName}">
+                                <el-radio :label="true">是</el-radio>
+                                <el-radio :label="false">否</el-radio>
+                            </el-radio-group>
+#elseif($item.componentType == "switch" && !$item.isEdit)
+                            <el-switch v-model="data.editData.${item.javaName}" active-value="true" inactive-value="false"></el-switch>
+#elseif($item.componentType == "date" && !$item.isEdit)
+                            <el-date-picker
+                                v-model="data.editData.${item.javaName}"
+                                type="date"
+                                placeholder="选择日期"
+                                value-format="yyyy-MM-dd"
+                            ></el-date-picker>
+#elseif($item.componentType == "datetime" && !$item.isEdit)
+                            <el-date-picker
+                                v-model="data.editData.${item.javaName}"
+                                type="datetime"
+                                placeholder="选择日期时间"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                            ></el-date-picker>
+#elseif($item.componentType == "image" && !$item.isEdit)
+                            <el-upload
+                                class="avatar-uploader"
+                                :action="data.baseURL+'file/upload'"
+                                :headers="data.headers"
+                                :show-file-list="false"
+                                :on-success="${item.javaName}UploadSuccess"
+                                :before-upload="${item.javaName}UploadBefore"
+                            >
+                                <img v-if="data.editData.${item.javaName}" :src="data.editData.${item.javaName}" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+#else
+                            <el-input v-model="data.editData.${item.javaName}" placeholder="请输入${item.comment}"></el-input>
+#end
                         </el-form-item>
                     </el-col>
 #end
@@ -32,6 +76,7 @@
 <script setup>
 import ${data.table.entityName}Api from '@/utils/api/${data.table.entityName}Api.js'
 import { ElMessage } from 'element-plus'
+import { storage } from '@/utils/storage'
 
 const props = defineProps({
     //v-model
@@ -60,6 +105,15 @@ const data = reactive({
 #end
 #end
     },
+#foreach($item in $data.table.columns)
+#if($item.componentType == "select" && $item.isAdd)
+    ${item.javaName}Options: [],
+#end
+#end
+    baseURL: import.meta.env.VITE_APP_BASE_API,
+    headers: {
+        'X-Token': storage.get('token')
+    }
 })
 
 const editForm = ref()
@@ -93,6 +147,39 @@ const edit = async (formEl) => {
         }
     })
 }
+#foreach($item in $data.table.columns)
+#if($item.componentType == "select" && $item.isEdit)
+const get${item.javaName}Options = () => {
+        ${data.table.entityName}Api.get${item.javaName}Options().then((res) => {
+    if (res.errno === 0) {
+      data.${item.javaName}Options = res.data
+    }
+  })
+}
+#elseif($item.componentType == "image" && $item.isEdit)
+//${item.comment}上传成功
+const ${item.javaName}UploadSuccess = (res) => {
+  if (res.errno === 0) {
+    data.addData.${item.javaName} = res.data
+  }
+}
+
+//${item.comment}上传前校验
+const ${item.javaName}UploadBefore = (file) => {
+  const isJPG = file.type === 'image/jpeg'
+  const isPNG = file.type === 'image/png'
+  const isLt2M = file.size / 1024 / 1024 < 2
+
+  if (!isJPG && !isPNG) {
+    ElMessage.error('上传头像图片只能是 JPG/PNG 格式!')
+  }
+  if (!isLt2M) {
+    ElMessage.error('上传头像图片大小不能超过 2MB!')
+  }
+  return (isJPG || isPNG) && isLt2M
+}
+#end
+#end
 </script>
 
 <style scoped lang="scss"></style>

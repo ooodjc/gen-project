@@ -40,17 +40,13 @@
     <el-table-column prop="componentType" label="表单类型">
       <template #default="{ row }">
         <el-select v-model="row.componentType" placeholder="请选择">
-          <el-option label="默认" value=""></el-option>
-          <el-option label="输入框" value="input"></el-option>
+          <el-option label="输入框" value=""></el-option>
           <el-option label="下拉框" value="select"></el-option>
           <el-option label="单选框" value="radio"></el-option>
-          <el-option label="布尔" value="boolean"></el-option>
           <el-option label="开关" value="switch"></el-option>
           <el-option label="日期" value="date"></el-option>
           <el-option label="日期时间" value="datetime"></el-option>
           <el-option label="图片" value="image"></el-option>
-          <el-option label="文件" value="file"></el-option>
-          <el-option label="富文本" value="editor"></el-option>
         </el-select>
       </template>
     </el-table-column>
